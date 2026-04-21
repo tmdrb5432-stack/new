@@ -469,32 +469,46 @@
             <div class="type-desc">기업AI고객담당 팀 내 미발굴 타겟</div>
           </div>
         </div>
-        <div class="type-kpi-row">
+        <!-- 1줄: 발굴대상 / 발굴고객 수 / 잔여 / 진척률 -->
+        <div class="type-kpi-row" style="margin-bottom:10px;">
           <div class="type-kpi">
             <div class="type-kpi-label">발굴대상</div>
             <div><span class="kpi-value" id="kpi-a-total">0</span><span class="kpi-unit">개사</span></div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">방문</div>
+            <div class="type-kpi-label">발굴고객 수</div>
             <div><span class="kpi-value" id="kpi-a-visited">0</span><span class="kpi-unit">개사</span></div>
-            <div class="kpi-sub" id="kpi-a-visited-rate">–</div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">잔여</div>
+            <div class="type-kpi-label">잔여 고객 수</div>
             <div><span class="kpi-value" id="kpi-a-remain">0</span><span class="kpi-unit">개사</span></div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">수주 건수</div>
-            <div><span class="kpi-value" id="kpi-a-orders">0</span><span class="kpi-unit">건</span></div>
-            <div class="kpi-sub" id="kpi-a-orders-rate">–</div>
+            <div class="type-kpi-label">진척률</div>
+            <div><span class="kpi-value" id="kpi-a-rate">0</span><span class="kpi-unit">%</span></div>
+          </div>
+        </div>
+        <!-- 2줄: 컨택건수 / 미팅건수 / 제안건수 -->
+        <div class="type-kpi-row" style="border-top:1px solid var(--border);padding-top:10px;">
+          <div class="type-kpi">
+            <div class="type-kpi-label">컨택 건수</div>
+            <div><span class="kpi-value" id="kpi-a-contact">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" style="font-size:10px;">이메일·전화</div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">수주액</div>
-            <div><span class="kpi-value" id="kpi-a-amount">0</span><span class="kpi-unit">억</span></div>
+            <div class="type-kpi-label">미팅 건수</div>
+            <div><span class="kpi-value" id="kpi-a-meeting">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" style="font-size:10px;">대면·화상</div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">제안 건수</div>
+            <div><span class="kpi-value" id="kpi-a-proposal">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" style="font-size:10px;">제안서·계약</div>
           </div>
         </div>
       </div>
@@ -508,54 +522,68 @@
             <div class="type-desc">Shift 참여 스타트업</div>
           </div>
         </div>
-        <div class="type-kpi-row">
+        <!-- 1줄 -->
+        <div class="type-kpi-row" style="margin-bottom:10px;">
           <div class="type-kpi">
             <div class="type-kpi-label">발굴대상</div>
             <div><span class="kpi-value" id="kpi-b-total">0</span><span class="kpi-unit">개사</span></div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">방문</div>
+            <div class="type-kpi-label">발굴고객 수</div>
             <div><span class="kpi-value" id="kpi-b-visited">0</span><span class="kpi-unit">개사</span></div>
-            <div class="kpi-sub" id="kpi-b-visited-rate">–</div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">잔여</div>
+            <div class="type-kpi-label">잔여 고객 수</div>
             <div><span class="kpi-value" id="kpi-b-remain">0</span><span class="kpi-unit">개사</span></div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">수주 건수</div>
-            <div><span class="kpi-value" id="kpi-b-orders">0</span><span class="kpi-unit">건</span></div>
-            <div class="kpi-sub" id="kpi-b-orders-rate">–</div>
+            <div class="type-kpi-label">진척률</div>
+            <div><span class="kpi-value" id="kpi-b-rate">0</span><span class="kpi-unit">%</span></div>
+          </div>
+        </div>
+        <!-- 2줄 -->
+        <div class="type-kpi-row" style="border-top:1px solid var(--border);padding-top:10px;">
+          <div class="type-kpi">
+            <div class="type-kpi-label">컨택 건수</div>
+            <div><span class="kpi-value" id="kpi-b-contact">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" style="font-size:10px;">이메일·전화</div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">수주액</div>
-            <div><span class="kpi-value" id="kpi-b-amount">0</span><span class="kpi-unit">억</span></div>
+            <div class="type-kpi-label">미팅 건수</div>
+            <div><span class="kpi-value" id="kpi-b-meeting">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" style="font-size:10px;">대면·화상</div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">제안 건수</div>
+            <div><span class="kpi-value" id="kpi-b-proposal">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" style="font-size:10px;">제안서·계약</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="dash-grid">
-      <!-- 영업사원별 활동 -->
+    <div class="dash-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
       <div class="dash-card">
-        <div class="dash-card-title">영업사원별 활동 현황 <span>방문 건수 기준</span></div>
-        <div class="bar-list" id="rep-bars">
-          <div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>
-        </div>
+        <div class="dash-card-title">영업사원별 <span>발굴고객 수</span></div>
+        <div class="bar-list" id="rep-bars-visited"></div>
       </div>
-
-      <!-- 고객반응 분포 -->
       <div class="dash-card">
-        <div class="dash-card-title">고객반응 분포 <span>전체 방문 기준</span></div>
-        <div id="reaction-dist">
-          <div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>
-        </div>
+        <div class="dash-card-title">영업사원별 <span>컨택 건수</span></div>
+        <div class="bar-list" id="rep-bars-contact"></div>
       </div>
-
+      <div class="dash-card">
+        <div class="dash-card-title">영업사원별 <span>미팅 건수</span></div>
+        <div class="bar-list" id="rep-bars-meeting"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">영업사원별 <span>제안 건수</span></div>
+        <div class="bar-list" id="rep-bars-proposal"></div>
+      </div>
       <!-- 최근 영업활동 -->
       <div class="dash-card" style="grid-column:1/-1;">
         <div class="dash-card-title">최근 영업활동 <span>최신 10건</span></div>
@@ -621,27 +649,21 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">고객 반응</label>
-          <div class="reaction-grid" id="reaction-chips">
-            <div class="reaction-chip" data-val="매우 긍정적" data-type="positive" onclick="selectReaction(this)">😄 매우 긍정적</div>
-            <div class="reaction-chip" data-val="긍정적" data-type="positive" onclick="selectReaction(this)">🙂 긍정적</div>
-            <div class="reaction-chip" data-val="보통" data-type="neutral" onclick="selectReaction(this)">😐 보통</div>
-            <div class="reaction-chip" data-val="부정적" data-type="negative" onclick="selectReaction(this)">😕 부정적</div>
-            <div class="reaction-chip" data-val="무반응" data-type="negative" onclick="selectReaction(this)">🔇 무반응</div>
-            <div class="reaction-chip" data-val="수주 확정" data-type="blue" onclick="selectReaction(this)">🎯 수주 확정</div>
-            <div class="reaction-chip" data-val="재방문 필요" data-type="neutral" onclick="selectReaction(this)">🔄 재방문 필요</div>
+          <label class="form-label">고객 PainPoint <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">중복 선택 가능</span></label>
+          <div class="reaction-grid" id="pain-chips">
+            <div class="reaction-chip" data-val="비용부담" data-type="negative" onclick="togglePain(this)">💰 비용부담</div>
+            <div class="reaction-chip" data-val="서비스 복잡성&관리 어려움" data-type="neutral" onclick="togglePain(this)">🔧 서비스 복잡성&amp;관리 어려움</div>
+            <div class="reaction-chip" data-val="장애/다운타임 리스크" data-type="negative" onclick="togglePain(this)">⚡ 장애/다운타임 리스크</div>
+            <div class="reaction-chip" data-val="보안 불안" data-type="negative" onclick="togglePain(this)">🔒 보안 불안</div>
+            <div class="reaction-chip" data-val="확장성 부족" data-type="neutral" onclick="togglePain(this)">📈 확장성 부족</div>
+            <div class="reaction-chip" data-val="내부 IT 인력 부족" data-type="neutral" onclick="togglePain(this)">👥 내부 IT 인력 부족</div>
           </div>
-          <input type="hidden" id="f-reaction">
+          <input type="hidden" id="f-pain">
         </div>
 
         <div class="form-group">
-          <label class="form-label">수주액 (억원) <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">수주 확정 시 입력</span></label>
-          <input type="number" class="form-control" id="f-amount" placeholder="예: 2.5" step="0.1" min="0">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">메모</label>
-          <textarea class="form-control" id="f-memo" placeholder="미팅 내용, 다음 액션 등 자유롭게 입력..."></textarea>
+          <label class="form-label">활동 내용</label>
+          <textarea class="form-control" id="f-memo" placeholder="활동 내용, 다음 액션 등 자유롭게 입력..."></textarea>
         </div>
 
         <div style="display:flex;gap:8px;">
@@ -653,7 +675,10 @@
       <!-- Log table -->
       <div>
         <div class="dash-card">
-          <div class="dash-card-title">영업활동 이력 <span id="act-count">0건</span></div>
+          <div class="dash-card-title" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>영업활동 이력 <span id="act-count" style="font-weight:400;color:var(--text3);">0건</span></span>
+            <button class="btn btn-outline btn-sm" onclick="exportActivitiesExcel()" style="font-size:11px;">⬇ 엑셀 추출</button>
+          </div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -661,15 +686,14 @@
                   <th>날짜</th>
                   <th>영업사원</th>
                   <th>고객사</th>
-                  <th>유형</th>
-                  <th>반응</th>
-                  <th>수주액</th>
-                  <th>메모</th>
+                  <th>활동유형</th>
+                  <th>고객 PainPoint</th>
+                  <th>활동 내용</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody id="activity-tbody">
-                <tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px;">등록된 활동 없음</td></tr>
+                <tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;">등록된 활동 없음</td></tr>
               </tbody>
             </table>
           </div>
@@ -813,110 +837,98 @@ function renderAll() {
   renderCustomerTable(customers);
 }
 
+// 활동 유형 분류 헬퍼
+const CONTACT_TYPES  = ['이메일','전화'];
+const MEETING_TYPES  = ['방문 미팅','화상 미팅'];
+const PROPOSAL_TYPES = ['제안서 발송','계약 체결'];
+
 function refreshDash() {
-  // 고객을 타입별로 분리 (엑셀 컬럼 '타입' 또는 'type' 기준, 없으면 전부 A타입으로 처리)
-  const getType = c => {
-    const t = (c['타입'] || c['type'] || c['TYPE'] || '').toString().trim().toUpperCase();
-    return t === 'B' ? 'B' : 'A';
-  };
+  const getType = c => (c['타입']||'A').toString().trim().toUpperCase() === 'B' ? 'B' : 'A';
   const custA = customers.filter(c => getType(c) === 'A');
   const custB = customers.filter(c => getType(c) === 'B');
-
-  // 활동도 타입별 분리 (activity에 customerType 저장)
-  const actA = activities.filter(a => a.customerType !== 'B');
-  const actB = activities.filter(a => a.customerType === 'B');
+  const actA  = activities.filter(a => a.customerType !== 'B');
+  const actB  = activities.filter(a => a.customerType === 'B');
 
   function calcKpi(cust, acts, prefix) {
-    const total = cust.length;
-    const visited = new Set(acts.map(a=>a.customer)).size;
-    const remain = Math.max(0, total - visited);
-    const orders = acts.filter(a => a.reaction === '수주 확정').length;
-    const amount = acts.reduce((s,a) => s + (parseFloat(a.amount)||0), 0);
-    document.getElementById(`kpi-${prefix}-total`).textContent = total.toLocaleString();
-    document.getElementById(`kpi-${prefix}-visited`).textContent = visited.toLocaleString();
-    document.getElementById(`kpi-${prefix}-visited-rate`).textContent = total ? `진척률 ${Math.round(visited/total*100)}%` : '–';
-    document.getElementById(`kpi-${prefix}-remain`).textContent = remain.toLocaleString();
-    document.getElementById(`kpi-${prefix}-orders`).textContent = orders.toLocaleString();
-    document.getElementById(`kpi-${prefix}-orders-rate`).textContent = visited ? `전환율 ${Math.round(orders/visited*100)}%` : '–';
-    document.getElementById(`kpi-${prefix}-amount`).textContent = amount % 1 === 0 ? amount.toLocaleString() : amount.toFixed(1);
+    const total    = cust.length;
+    const visited  = new Set(acts.map(a => a.customer)).size;  // 중복 제거
+    const remain   = Math.max(0, total - visited);
+    const rate     = total ? Math.round(visited / total * 100) : 0;
+    const contact  = acts.filter(a => CONTACT_TYPES.includes(a.type)).length;
+    const meeting  = acts.filter(a => MEETING_TYPES.includes(a.type)).length;
+    const proposal = acts.filter(a => PROPOSAL_TYPES.includes(a.type)).length;
+    document.getElementById(`kpi-${prefix}-total`).textContent    = total.toLocaleString();
+    document.getElementById(`kpi-${prefix}-visited`).textContent  = visited.toLocaleString();
+    document.getElementById(`kpi-${prefix}-remain`).textContent   = remain.toLocaleString();
+    document.getElementById(`kpi-${prefix}-rate`).textContent     = rate;
+    document.getElementById(`kpi-${prefix}-contact`).textContent  = contact.toLocaleString();
+    document.getElementById(`kpi-${prefix}-meeting`).textContent  = meeting.toLocaleString();
+    document.getElementById(`kpi-${prefix}-proposal`).textContent = proposal.toLocaleString();
   }
   calcKpi(custA, actA, 'a');
   calcKpi(custB, actB, 'b');
 
-  const totalActs = activities.length;
+  // ── 영업사원별 4종 바 차트 ──
+  const reps      = ['추승훈','강소연','김나정','안수진','이정민','김윤환'];
+  const repColors = ['#2563eb','#16a34a','#d97706','#7c3aed','#dc2626','#0891b2'];
+  const EMPTY_MSG = '<div style="color:var(--text3);font-size:12px;padding:16px 0;text-align:center;">데이터 없음</div>';
 
-  // Rep bars
-  const reps = ['추승훈','강소연','김나정','안수진','이정민','김윤환'];
-  const repColors = ['#3b82f6','#22c55e','#f59e0b','#a78bfa','#ef4444','#06b6d4'];
-  const repCounts = reps.map(r => activities.filter(a=>a.rep===r).length);
-  const maxCount = Math.max(...repCounts, 1);
-
-  const barsEl = document.getElementById('rep-bars');
-  if(totalActs === 0) {
-    barsEl.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>';
-  } else {
-    barsEl.innerHTML = reps.map((r,i) => `
+  function renderRepBars(elId, countFn) {
+    const el = document.getElementById(elId);
+    if(!el) return;
+    const counts = reps.map(countFn);
+    const max = Math.max(...counts, 1);
+    if(counts.every(c=>c===0)) { el.innerHTML = EMPTY_MSG; return; }
+    el.innerHTML = reps.map((r,i) => `
       <div class="bar-item">
         <div class="bar-header">
           <span class="bar-name">${r}</span>
-          <span class="bar-val">${repCounts[i]}건</span>
+          <span class="bar-val">${counts[i]}건</span>
         </div>
         <div class="bar-track">
-          <div class="bar-fill" style="width:${repCounts[i]/maxCount*100}%;background:${repColors[i]};"></div>
+          <div class="bar-fill" style="width:${counts[i]/max*100}%;background:${repColors[i]};"></div>
         </div>
       </div>`).join('');
   }
 
-  // Reaction dist
-  const reactionMap = {};
-  activities.forEach(a => { if(a.reaction) reactionMap[a.reaction] = (reactionMap[a.reaction]||0)+1; });
-  const reactEl = document.getElementById('reaction-dist');
-  if(!totalActs) {
-    reactEl.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>';
-  } else {
-    const total2 = activities.filter(a=>a.reaction).length || 1;
-    const colorMap = {'매우 긍정적':'#22c55e','긍정적':'#86efac','보통':'#f59e0b','부정적':'#ef4444','무반응':'#6e7681','수주 확정':'#3b82f6','재방문 필요':'#a78bfa'};
-    reactEl.innerHTML = '<div class="bar-list">' + Object.entries(reactionMap).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `
-      <div class="bar-item">
-        <div class="bar-header"><span class="bar-name">${k}</span><span class="bar-val">${v}건 (${Math.round(v/total2*100)}%)</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${v/total2*100}%;background:${colorMap[k]||'#3b82f6'};"></div></div>
-      </div>`).join('') + '</div>';
-  }
+  renderRepBars('rep-bars-visited',  r => new Set(activities.filter(a=>a.rep===r).map(a=>a.customer)).size);
+  renderRepBars('rep-bars-contact',  r => activities.filter(a=>a.rep===r && CONTACT_TYPES.includes(a.type)).length);
+  renderRepBars('rep-bars-meeting',  r => activities.filter(a=>a.rep===r && MEETING_TYPES.includes(a.type)).length);
+  renderRepBars('rep-bars-proposal', r => activities.filter(a=>a.rep===r && PROPOSAL_TYPES.includes(a.type)).length);
 
-  // Recent
+  // ── 최근 영업활동 ──
   const recentEl = document.getElementById('recent-activity');
   const recent = [...activities].sort((a,b)=>b.id-a.id).slice(0,10);
   if(!recent.length) {
     recentEl.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">등록된 영업활동 없음</div>';
   } else {
-    const reactionBadge = r => {
-      if(!r) return '';
-      if(['매우 긍정적','긍정적'].includes(r)) return `<span class="badge badge-green">${r}</span>`;
-      if(['부정적','무반응'].includes(r)) return `<span class="badge badge-red">${r}</span>`;
-      if(r==='수주 확정') return `<span class="badge badge-blue">${r}</span>`;
-      if(r==='재방문 필요') return `<span class="badge badge-purple">${r}</span>`;
-      return `<span class="badge badge-yellow">${r}</span>`;
-    };
+    const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
     recentEl.innerHTML = '<div class="activity-list">' + recent.map(a => `
       <div class="activity-item">
-        <div class="activity-dot" style="background:${a.reaction==='수주 확정'?'var(--accent)':a.reaction&&['매우 긍정적','긍정적'].includes(a.reaction)?'var(--green)':'var(--border2)'}"></div>
+        <div class="activity-dot" style="background:${PROPOSAL_TYPES.includes(a.type)?'var(--purple)':MEETING_TYPES.includes(a.type)?'var(--green)':'var(--accent)'}"></div>
         <div class="activity-info">
-          <div class="activity-name">${a.customer} <span style="color:var(--text3);font-weight:400;font-size:11px;">${a.type||''}</span></div>
-          <div class="activity-desc">${a.rep} · ${a.memo||'메모 없음'}</div>
+          <div class="activity-name">${a.customer} <span class="badge ${typeColor(a.type)}" style="margin-left:6px;font-size:10px;">${a.type||''}</span></div>
+          <div class="activity-desc">${a.rep} · ${a.memo||'활동 내용 없음'}</div>
         </div>
-        ${reactionBadge(a.reaction)}
-        ${a.amount?`<span class="badge badge-green">${a.amount}억</span>`:''}
+        ${a.pain?`<span class="badge badge-yellow" style="font-size:10px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.pain.split(',')[0]}${a.pain.includes(',')?' 외':''}</span>`:''}
         <div class="activity-time">${a.date}</div>
       </div>`).join('') + '</div>';
   }
 }
 
 // ──────────────── ACTIVITY ────────────────
-function selectReaction(el) {
-  document.querySelectorAll('.reaction-chip').forEach(c => c.className='reaction-chip');
-  el.classList.add('active-'+el.dataset.type);
-  selectedReaction = el.dataset.val;
-  document.getElementById('f-reaction').value = selectedReaction;
+// PainPoint 중복 선택
+const selectedPains = new Set();
+function togglePain(el) {
+  const val = el.dataset.val;
+  if(selectedPains.has(val)) {
+    selectedPains.delete(val);
+    el.className = 'reaction-chip';
+  } else {
+    selectedPains.add(val);
+    el.classList.add('active-' + el.dataset.type);
+  }
+  document.getElementById('f-pain').value = [...selectedPains].join(',');
 }
 
 function getCustomerName(c) {
@@ -947,73 +959,81 @@ function showDropdown() { if(document.getElementById('f-customer-input').value) 
 function hideDropdown() { setTimeout(()=>document.getElementById('customer-dropdown').classList.remove('open'),200); }
 
 async function submitActivity() {
-  const rep = document.getElementById('f-rep').value;
+  const rep      = document.getElementById('f-rep').value;
   const customer = document.getElementById('f-customer-val').value || document.getElementById('f-customer-input').value;
-  const type = document.getElementById('f-type').value;
-  const date = document.getElementById('f-date').value;
-  if(!rep) { showToast('⚠️','영업사원을 선택해주세요'); return; }
+  const type     = document.getElementById('f-type').value;
+  const date     = document.getElementById('f-date').value;
+  if(!rep)      { showToast('⚠️','영업사원을 선택해주세요'); return; }
   if(!customer) { showToast('⚠️','고객사를 입력해주세요'); return; }
-  if(!date) { showToast('⚠️','활동일을 입력해주세요'); return; }
+  if(!type)     { showToast('⚠️','활동 유형을 선택해주세요'); return; }
+  if(!date)     { showToast('⚠️','활동일을 입력해주세요'); return; }
+
+  const found = customers.find(c => (c['고객명']||c[Object.keys(c)[0]]||'') === customer);
+  const customerType = found ? ((found['타입']||'A').toString().trim().toUpperCase()==='B'?'B':'A') : 'A';
 
   const act = {
     id: Date.now(),
-    date, rep, customer, type,
-    customerType: (() => {
-      const found = customers.find(c => {
-        const name = c['고객사명'] || c[Object.keys(c)[0]] || '';
-        return name === customer;
-      });
-      if(!found) return 'A';
-      const t = (found['타입'] || found['type'] || found['TYPE'] || '').toString().trim().toUpperCase();
-      return t === 'B' ? 'B' : 'A';
-    })(),
-    reaction: document.getElementById('f-reaction').value,
-    amount: document.getElementById('f-amount').value,
+    date, rep, customer, type, customerType,
+    pain: document.getElementById('f-pain').value,
     memo: document.getElementById('f-memo').value
   };
   activities.unshift(act);
   renderActivityTable();
   refreshDash();
+  renderCustomerTable(customers);
   resetForm();
   showToast('✓','영업활동이 등록되었습니다');
   await saveToBin();
 }
 
 function resetForm() {
-  ['f-rep','f-type','f-memo','f-amount'].forEach(id => document.getElementById(id).value='');
+  ['f-rep','f-type','f-memo','f-pain'].forEach(id => document.getElementById(id).value='');
   document.getElementById('f-customer-input').value='';
   document.getElementById('f-customer-val').value='';
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.querySelectorAll('.reaction-chip').forEach(c=>c.className='reaction-chip');
-  selectedReaction='';
+  selectedPains.clear();
 }
 
 function renderActivityTable() {
   const tbody = document.getElementById('activity-tbody');
   document.getElementById('act-count').textContent = activities.length+'건';
   if(!activities.length) {
-    tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px;">등록된 활동 없음</td></tr>';
+    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;">등록된 활동 없음</td></tr>';
     return;
   }
-  const reactionBadge = r => {
-    if(!r) return '<span style="color:var(--text3)">–</span>';
-    if(['매우 긍정적','긍정적'].includes(r)) return `<span class="badge badge-green">${r}</span>`;
-    if(['부정적','무반응'].includes(r)) return `<span class="badge badge-red">${r}</span>`;
-    if(r==='수주 확정') return `<span class="badge badge-blue">${r}</span>`;
-    if(r==='재방문 필요') return `<span class="badge badge-purple">${r}</span>`;
-    return `<span class="badge badge-yellow">${r}</span>`;
-  };
-  tbody.innerHTML = activities.map(a => `
-    <tr>
-      <td style="font-family:var(--mono);font-size:12px;">${a.date}</td>
+  const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
+  tbody.innerHTML = activities.map(a => {
+    const painTags = a.pain ? a.pain.split(',').filter(Boolean).map(p=>`<span class="badge badge-yellow" style="margin:1px;font-size:10px;">${p}</span>`).join('') : '–';
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:12px;white-space:nowrap;">${a.date}</td>
       <td class="td-name">${a.rep}</td>
       <td class="td-name">${a.customer}</td>
-      <td><span class="badge badge-blue">${a.type||'–'}</span></td>
-      <td>${reactionBadge(a.reaction)}</td>
-      <td style="font-family:var(--mono);color:var(--green);">${a.amount?a.amount+'억':'–'}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text3);" title="${a.memo||''}">${a.memo||'–'}</td>
+      <td><span class="badge ${typeColor(a.type)}">${a.type||'–'}</span></td>
+      <td style="max-width:200px;">${painTags}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2);" title="${a.memo||''}">${a.memo||'–'}</td>
       <td><button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red-bg);" onclick="deleteActivity(${a.id})">삭제</button></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
+}
+
+// ─── 엑셀 추출 ───
+function exportActivitiesExcel() {
+  if(!activities.length) { showToast('⚠️','내보낼 데이터가 없습니다'); return; }
+  const headers = ['날짜','영업사원','고객사','타입','활동유형','고객 PainPoint','활동 내용'];
+  const rows = activities.map(a => [
+    a.date, a.rep, a.customer, a.customerType||'A', a.type||'',
+    a.pain||'', a.memo||''
+  ]);
+  const csvContent = [headers, ...rows]
+    .map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+  const blob = new Blob(['\uFEFF'+csvContent], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `영업활동이력_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('✓','엑셀 파일로 추출했습니다');
 }
 
 async function deleteActivity(id) {
@@ -1147,11 +1167,8 @@ function renderCustomerTable(data) {
     const acts = activities.filter(a => a.customer === name);
     if(!acts.length) return '<span style="color:var(--text3);font-size:11px;">미방문</span>';
     const last = acts.sort((a,b)=>b.id-a.id)[0];
-    if(last.reaction==='수주 확정') return '<span class="badge badge-blue">수주 확정</span>';
-    if(['매우 긍정적','긍정적'].includes(last.reaction)) return '<span class="badge badge-green">'+last.reaction+'</span>';
-    if(['부정적','무반응'].includes(last.reaction)) return '<span class="badge badge-red">'+last.reaction+'</span>';
-    if(last.reaction) return '<span class="badge badge-yellow">'+last.reaction+'</span>';
-    return '<span class="badge badge-blue">방문완료</span>';
+    const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
+    return `<span class="badge ${typeColor(last.type)}">${last.type||'방문완료'}</span>`;
   };
   wrap.innerHTML = `<table>
     <thead><tr>
