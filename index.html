@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>신성장고객발굴 TF — 영업 대시보드</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #f8fafc;
+    --surface3: #eef2f7;
+    --border: #e2e8f0;
+    --border2: #cbd5e1;
+    --text: #1e293b;
+    --text2: #475569;
+    --text3: #94a3b8;
+    --accent: #2563eb;
+    --accent2: #1d4ed8;
+    --accent-glow: rgba(37,99,235,0.1);
+    --green: #16a34a;
+    --green-bg: rgba(22,163,74,0.08);
+    --yellow: #d97706;
+    --yellow-bg: rgba(217,119,6,0.08);
+    --red: #dc2626;
+    --red-bg: rgba(220,38,38,0.08);
+    --purple: #7c3aed;
+    --purple-bg: rgba(124,58,237,0.08);
+    --radius: 10px;
+    --font: 'Noto Sans KR', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--font); font-size:14px; min-height:100vh; }
+
+  /* Header */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 56px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .logo-badge {
+    background: var(--accent);
+    color: white;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+  .logo-text { font-size:14px; font-weight:600; color:var(--text); }
+  .header-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .header-date { font-family:var(--mono); font-size:12px; color:var(--text3); }
+
+  /* Tabs */
+  .tabs {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    padding: 12px 20px;
+    font-size:13px;
+    font-weight:500;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Content */
+  .content { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+  /* Panel */
+  .panel { display:none; }
+  .panel.active { display:block; }
+
+  /* ─── DASHBOARD ─── */
+
+  /* A/B 타입 섹션 */
+  .type-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .type-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .type-block::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; height:3px;
+  }
+  .type-a { border-color: rgba(37,99,235,0.25); background: #f0f6ff; }
+  .type-a::before { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+  .type-b { border-color: rgba(124,58,237,0.25); background: #f5f0ff; }
+  .type-b::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+  .type-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .type-badge {
+    width:32px; height:32px;
+    border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:15px; font-weight:700;
+    flex-shrink:0;
+  }
+  .type-badge-a { background:rgba(37,99,235,0.12); color:#2563eb; }
+  .type-badge-b { background:rgba(124,58,237,0.12); color:#7c3aed; }
+  .type-title { font-size:13px; font-weight:700; color:var(--text); }
+  .type-desc { font-size:11px; color:var(--text3); margin-top:2px; }
+  .type-kpi-row {
+    display:flex; align-items:center; gap:0;
+  }
+  .type-kpi { flex:1; text-align:center; }
+  .type-kpi-divider { width:1px; height:36px; background:var(--border); flex-shrink:0; }
+  .type-kpi-label { font-size:10px; font-weight:500; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .kpi-card:hover { border-color: var(--border2); }
+  .kpi-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; height:2px;
+  }
+  .kpi-card.blue::before { background: var(--accent); }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.yellow::before { background: var(--yellow); }
+  .kpi-card.red::before { background: var(--red); }
+  .kpi-card.purple::before { background: var(--purple); }
+  .kpi-label { font-size:11px; font-weight:500; color:var(--text3); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
+  .kpi-value { font-family:var(--mono); font-size:28px; font-weight:500; color:var(--text); line-height:1; }
+  .kpi-unit { font-size:13px; color:var(--text2); margin-left:2px; }
+  .kpi-sub { font-size:11px; color:var(--text3); margin-top:6px; font-family:var(--mono); }
+
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .dash-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .dash-card-title {
+    font-size:12px;
+    font-weight:600;
+    color:var(--text2);
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .dash-card-title span { color:var(--text3); font-weight:400; text-transform:none; letter-spacing:0; font-size:11px; }
+
+  /* Bar chart */
+  .bar-list { display:flex; flex-direction:column; gap:10px; }
+  .bar-item { display:flex; flex-direction:column; gap:4px; }
+  .bar-header { display:flex; justify-content:space-between; align-items:center; }
+  .bar-name { font-size:12px; color:var(--text2); }
+  .bar-val { font-family:var(--mono); font-size:12px; color:var(--text); }
+  .bar-track { height:6px; background:var(--surface3); border-radius:3px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:3px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+  /* Recent activity */
+  .activity-list { display:flex; flex-direction:column; gap:8px; }
+  .activity-item {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 12px;
+    background:var(--surface2);
+    border-radius:7px;
+    font-size:12px;
+  }
+  .activity-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .activity-info { flex:1; }
+  .activity-name { font-weight:500; color:var(--text); }
+  .activity-desc { color:var(--text3); margin-top:1px; font-size:11px; }
+  .activity-time { font-family:var(--mono); font-size:11px; color:var(--text3); }
+  .badge {
+    display:inline-flex; align-items:center;
+    padding:2px 7px;
+    border-radius:4px;
+    font-size:11px;
+    font-weight:500;
+    white-space:nowrap;
+  }
+  .badge-green { background:var(--green-bg); color:var(--green); }
+  .badge-yellow { background:var(--yellow-bg); color:var(--yellow); }
+  .badge-red { background:var(--red-bg); color:var(--red); }
+  .badge-blue { background:var(--accent-glow); color:var(--accent); }
+  .badge-purple { background:var(--purple-bg); color:var(--purple); }
+
+  /* ─── ACTIVITY FORM ─── */
+  .form-wrap {
+    display:grid;
+    grid-template-columns: 420px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .form-title { font-size:14px; font-weight:600; margin-bottom:20px; color:var(--text); }
+  .form-group { margin-bottom:16px; }
+  .form-label { display:block; font-size:11px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px; }
+  .form-label .req { color:var(--red); margin-left:2px; }
+  .form-control {
+    width:100%;
+    background:var(--surface2);
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:9px 12px;
+    color:var(--text);
+    font-family:var(--font);
+    font-size:13px;
+    outline:none;
+    transition:border-color 0.2s;
+  }
+  .form-control:focus { border-color:var(--accent); }
+  .form-control::placeholder { color:var(--text3); }
+  select.form-control option { background:var(--surface2); }
+  textarea.form-control { resize:vertical; min-height:80px; }
+
+  /* Search dropdown */
+  .search-wrap { position:relative; }
+  .search-dropdown {
+    position:absolute; top:calc(100%+4px); left:0; right:0;
+    background:var(--surface2);
+    border:1px solid var(--border2);
+    border-radius:7px;
+    max-height:220px; overflow-y:auto;
+    z-index:50;
+    display:none;
+  }
+  .search-dropdown.open { display:block; }
+  .search-option {
+    padding:9px 12px;
+    cursor:pointer;
+    font-size:13px;
+    color:var(--text2);
+    border-bottom:1px solid var(--border);
+    transition:background 0.15s;
+  }
+  .search-option:last-child { border-bottom:none; }
+  .search-option:hover, .search-option.selected { background:var(--surface3); color:var(--text); }
+  .search-option mark { background:transparent; color:var(--accent); font-weight:600; }
+
+  /* Reaction chips */
+  .reaction-grid { display:flex; flex-wrap:wrap; gap:8px; }
+  .reaction-chip {
+    padding:7px 14px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    font-size:12px;
+    cursor:pointer;
+    color:var(--text2);
+    transition:all 0.15s;
+    background:var(--surface2);
+  }
+  .reaction-chip:hover { border-color:var(--border2); color:var(--text); }
+  .reaction-chip.active-positive { border-color:var(--green); background:var(--green-bg); color:var(--green); }
+  .reaction-chip.active-neutral { border-color:var(--yellow); background:var(--yellow-bg); color:var(--yellow); }
+  .reaction-chip.active-negative { border-color:var(--red); background:var(--red-bg); color:var(--red); }
+  .reaction-chip.active-blue { border-color:var(--accent); background:var(--accent-glow); color:var(--accent); }
+
+  /* Btn */
+  .btn {
+    padding:10px 20px;
+    border-radius:7px;
+    font-family:var(--font);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    border:none;
+    transition:all 0.15s;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .btn-primary { background:var(--accent); color:white; }
+  .btn-primary:hover { background:var(--accent2); }
+  .btn-outline { background:transparent; color:var(--text2); border:1px solid var(--border); }
+  .btn-outline:hover { border-color:var(--border2); color:var(--text); }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+  .btn-green { background:var(--green); color:#ffffff; }
+  .btn-green:hover { background:#16a34a; }
+
+  /* Activity log table */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  th {
+    text-align:left; padding:10px 14px;
+    font-size:11px; font-weight:600; color:var(--text3);
+    text-transform:uppercase; letter-spacing:0.6px;
+    border-bottom:1px solid var(--border);
+    background:var(--surface);
+    white-space:nowrap;
+  }
+  td {
+    padding:11px 14px;
+    font-size:13px; color:var(--text2);
+    border-bottom:1px solid var(--border);
+    vertical-align:middle;
+  }
+  tr:hover td { background:var(--surface2); }
+  .td-name { color:var(--text); font-weight:500; }
+
+  /* ─── CUSTOMER LIST ─── */
+  .customer-toolbar {
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .search-input-wrap { position:relative; flex:1; min-width:220px; }
+  .search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:14px; }
+  .search-input {
+    width:100%;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:9px 12px 9px 34px;
+    color:var(--text); font-family:var(--font); font-size:13px;
+    outline:none; transition:border-color 0.2s;
+  }
+  .search-input:focus { border-color:var(--accent); }
+  .search-input::placeholder { color:var(--text3); }
+
+  .upload-zone {
+    border:2px dashed var(--border2);
+    border-radius:var(--radius);
+    padding:32px;
+    text-align:center;
+    cursor:pointer;
+    transition:all 0.2s;
+    background:var(--surface);
+    margin-bottom:20px;
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color:var(--accent); background:var(--accent-glow); }
+  .upload-icon { font-size:28px; margin-bottom:10px; }
+  .upload-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .upload-desc { font-size:12px; color:var(--text3); }
+  .upload-desc b { color:var(--accent); }
+  #fileInput { display:none; }
+
+  .customer-count {
+    font-family:var(--mono); font-size:12px; color:var(--text3);
+    background:var(--surface2);
+    border:1px solid var(--border);
+    padding:4px 10px; border-radius:5px;
+  }
+
+  .empty-state {
+    text-align:center;
+    padding:60px 20px;
+    color:var(--text3);
+  }
+  .empty-state .icon { font-size:40px; margin-bottom:12px; opacity:0.4; }
+  .empty-state p { font-size:13px; line-height:1.6; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+  /* Toast */
+  .toast {
+    position:fixed; bottom:24px; right:24px;
+    background:var(--surface2);
+    border:1px solid var(--border2);
+    border-radius:var(--radius);
+    padding:14px 18px;
+    font-size:13px;
+    color:var(--text);
+    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    z-index:999;
+    transform:translateY(80px); opacity:0;
+    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+    display:flex; align-items:center; gap:10px;
+  }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .toast-icon { font-size:16px; }
+
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .section-title { font-size:16px; font-weight:700; color:var(--text); }
+  .section-sub { font-size:12px; color:var(--text3); margin-top:2px; }
+  .divider { height:1px; background:var(--border); margin:20px 0; }
+
+  /* Progress ring */
+  .progress-ring-wrap { display:flex; align-items:center; gap:16px; }
+  .ring-labels { display:flex; flex-direction:column; gap:4px; }
+  .ring-label-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text2); }
+  .ring-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <span class="logo-badge">TF</span>
+    <span class="logo-text">신성장고객발굴 TF</span>
+  </div>
+  <div style="width:1px;height:20px;background:var(--border);"></div>
+  <span style="font-size:12px;color:var(--text3);">기업AI고객담당 · LG U+</span>
+  <div class="header-right">
+    <span id="sync-status" style="font-size:12px;display:flex;align-items:center;gap:5px;color:#64748b;">🔄 불러오는 중...</span>
+    <button class="btn btn-outline btn-sm" onclick="loadFromBin()" style="font-size:11px;padding:4px 10px;">↻ 새로고침</button>
+    <span class="header-date" id="headerDate"></span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('dashboard')">📊 대시보드</div>
+  <div class="tab" onclick="switchTab('activity')">✏️ 영업활동 입력</div>
+  <div class="tab" onclick="switchTab('customers')">🏢 고객현황</div>
+</div>
+
+<div class="content">
+
+  <!-- ────────────────────────────────── DASHBOARD ── -->
+  <div id="panel-dashboard" class="panel active">
+    <div class="section-header" style="margin-bottom:20px;">
+      <div>
+        <div class="section-title">영업 현황 대시보드</div>
+        <div class="section-sub">신성장고객발굴 TF — 실시간 현황</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="refreshDash()">↻ 새로고침</button>
+    </div>
+
+    <!-- ── 전체고객 섹션: A타입 / B타입 ── -->
+    <div class="type-section">
+      <!-- A타입 -->
+      <div class="type-block type-a">
+        <div class="type-header">
+          <span class="type-badge type-badge-a">A</span>
+          <div>
+            <div class="type-title">A타입</div>
+            <div class="type-desc">기업AI고객담당 팀 내 미발굴 타겟</div>
+          </div>
+        </div>
+        <div class="type-kpi-row">
+          <div class="type-kpi">
+            <div class="type-kpi-label">발굴대상</div>
+            <div><span class="kpi-value" id="kpi-a-total">0</span><span class="kpi-unit">개사</span></div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">방문</div>
+            <div><span class="kpi-value" id="kpi-a-visited">0</span><span class="kpi-unit">개사</span></div>
+            <div class="kpi-sub" id="kpi-a-visited-rate">–</div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">잔여</div>
+            <div><span class="kpi-value" id="kpi-a-remain">0</span><span class="kpi-unit">개사</span></div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">수주 건수</div>
+            <div><span class="kpi-value" id="kpi-a-orders">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" id="kpi-a-orders-rate">–</div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">수주액</div>
+            <div><span class="kpi-value" id="kpi-a-amount">0</span><span class="kpi-unit">억</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B타입 -->
+      <div class="type-block type-b">
+        <div class="type-header">
+          <span class="type-badge type-badge-b">B</span>
+          <div>
+            <div class="type-title">B타입</div>
+            <div class="type-desc">Shift 참여 스타트업</div>
+          </div>
+        </div>
+        <div class="type-kpi-row">
+          <div class="type-kpi">
+            <div class="type-kpi-label">발굴대상</div>
+            <div><span class="kpi-value" id="kpi-b-total">0</span><span class="kpi-unit">개사</span></div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">방문</div>
+            <div><span class="kpi-value" id="kpi-b-visited">0</span><span class="kpi-unit">개사</span></div>
+            <div class="kpi-sub" id="kpi-b-visited-rate">–</div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">잔여</div>
+            <div><span class="kpi-value" id="kpi-b-remain">0</span><span class="kpi-unit">개사</span></div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">수주 건수</div>
+            <div><span class="kpi-value" id="kpi-b-orders">0</span><span class="kpi-unit">건</span></div>
+            <div class="kpi-sub" id="kpi-b-orders-rate">–</div>
+          </div>
+          <div class="type-kpi-divider"></div>
+          <div class="type-kpi">
+            <div class="type-kpi-label">수주액</div>
+            <div><span class="kpi-value" id="kpi-b-amount">0</span><span class="kpi-unit">억</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <!-- 영업사원별 활동 -->
+      <div class="dash-card">
+        <div class="dash-card-title">영업사원별 활동 현황 <span>방문 건수 기준</span></div>
+        <div class="bar-list" id="rep-bars">
+          <div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>
+        </div>
+      </div>
+
+      <!-- 고객반응 분포 -->
+      <div class="dash-card">
+        <div class="dash-card-title">고객반응 분포 <span>전체 방문 기준</span></div>
+        <div id="reaction-dist">
+          <div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>
+        </div>
+      </div>
+
+      <!-- 최근 영업활동 -->
+      <div class="dash-card" style="grid-column:1/-1;">
+        <div class="dash-card-title">최근 영업활동 <span>최신 10건</span></div>
+        <div id="recent-activity">
+          <div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">등록된 영업활동 없음</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────── ACTIVITY ── -->
+  <div id="panel-activity" class="panel">
+    <div class="section-header">
+      <div>
+        <div class="section-title">영업활동 입력</div>
+        <div class="section-sub">방문·미팅·전화 등 영업 활동을 기록합니다</div>
+      </div>
+    </div>
+
+    <div class="form-wrap">
+      <!-- Form -->
+      <div class="form-card">
+        <div class="form-title">새 영업활동 등록</div>
+
+        <div class="form-group">
+          <label class="form-label">영업사원 <span class="req">*</span></label>
+          <select class="form-control" id="f-rep">
+            <option value="">-- 선택 --</option>
+            <option>추승훈</option>
+            <option>강소연</option>
+            <option>김나정</option>
+            <option>안수진</option>
+            <option>이정민</option>
+            <option>김윤환</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">활동 유형 <span class="req">*</span></label>
+          <select class="form-control" id="f-type">
+            <option value="">-- 선택 --</option>
+            <option>방문 미팅</option>
+            <option>전화</option>
+            <option>이메일</option>
+            <option>화상 미팅</option>
+            <option>제안서 발송</option>
+            <option>계약 체결</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">고객사 <span class="req">*</span></label>
+          <div class="search-wrap">
+            <input type="text" class="form-control" id="f-customer-input" placeholder="고객사명 검색..." autocomplete="off" oninput="filterCustomers(this.value)" onfocus="showDropdown()" onblur="hideDropdown()">
+            <input type="hidden" id="f-customer-val">
+            <div class="search-dropdown" id="customer-dropdown"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">활동일 <span class="req">*</span></label>
+          <input type="date" class="form-control" id="f-date">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">고객 반응</label>
+          <div class="reaction-grid" id="reaction-chips">
+            <div class="reaction-chip" data-val="매우 긍정적" data-type="positive" onclick="selectReaction(this)">😄 매우 긍정적</div>
+            <div class="reaction-chip" data-val="긍정적" data-type="positive" onclick="selectReaction(this)">🙂 긍정적</div>
+            <div class="reaction-chip" data-val="보통" data-type="neutral" onclick="selectReaction(this)">😐 보통</div>
+            <div class="reaction-chip" data-val="부정적" data-type="negative" onclick="selectReaction(this)">😕 부정적</div>
+            <div class="reaction-chip" data-val="무반응" data-type="negative" onclick="selectReaction(this)">🔇 무반응</div>
+            <div class="reaction-chip" data-val="수주 확정" data-type="blue" onclick="selectReaction(this)">🎯 수주 확정</div>
+            <div class="reaction-chip" data-val="재방문 필요" data-type="neutral" onclick="selectReaction(this)">🔄 재방문 필요</div>
+          </div>
+          <input type="hidden" id="f-reaction">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">수주액 (억원) <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">수주 확정 시 입력</span></label>
+          <input type="number" class="form-control" id="f-amount" placeholder="예: 2.5" step="0.1" min="0">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">메모</label>
+          <textarea class="form-control" id="f-memo" placeholder="미팅 내용, 다음 액션 등 자유롭게 입력..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" style="flex:1;" onclick="submitActivity()">✓ 등록</button>
+          <button class="btn btn-outline" onclick="resetForm()">초기화</button>
+        </div>
+      </div>
+
+      <!-- Log table -->
+      <div>
+        <div class="dash-card">
+          <div class="dash-card-title">영업활동 이력 <span id="act-count">0건</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>날짜</th>
+                  <th>영업사원</th>
+                  <th>고객사</th>
+                  <th>유형</th>
+                  <th>반응</th>
+                  <th>수주액</th>
+                  <th>메모</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="activity-tbody">
+                <tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px;">등록된 활동 없음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────── CUSTOMERS ── -->
+  <div id="panel-customers" class="panel">
+    <div class="section-header">
+      <div>
+        <div class="section-title">고객현황</div>
+        <div class="section-sub">발굴 대상 고객 목록 · A타입 <span id="count-a" style="color:var(--accent)">0</span>개사 · B타입 <span id="count-b" style="color:var(--purple)">0</span>개사</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="customer-toolbar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="고객명 검색..." oninput="filterCustomerTable(this.value)">
+      </div>
+      <select class="form-control" style="width:120px;padding:8px 12px;font-size:12px;" onchange="filterCustomerTable(document.querySelector('.search-input').value, this.value)">
+        <option value="">전체 타입</option>
+        <option value="A">A타입</option>
+        <option value="B">B타입</option>
+      </select>
+      <span class="customer-count" id="customer-count">0개사</span>
+      <button class="btn btn-outline btn-sm" onclick="exportCSV()">↓ CSV 내보내기</button>
+    </div>
+
+    <div class="dash-card" style="padding:0;overflow:hidden;">
+      <div class="table-wrap" id="customer-table-wrap"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span id="toast-msg">저장되었습니다</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ──────────────── STATE ────────────────
+let selectedReaction = '';
+
+// ── 고객 데이터 (하드코딩) ──
+const CUSTOMERS_DEFAULT = [
+  // A타입: 기업AI고객담당 팀 내 미발굴 타겟
+  "아크몬스터","그린웹서비스","제뉴원사이언스","쓰리에이로직스","비트센싱","에어키","라엘코리아","씨씨미디어서비스","게임덱스","온다","이노보테라퓨틱스","니즈게임즈","문화상품권","이스트에이드","딜리버리랩","알토스바이오로직스","갑조네","성진리테일","데브시스터즈","라이언로켓","디엠아이시스템즈","네이버커넥트","럽디","솔트룩스","에스제이텍","삼삼해물","네시삼십삼분","스칼라데이터","씨플랫폼","지이모션","슬링","메타센테라퓨틱스","비스무트","룰루메딕","만해항운한국","이트라이브","오토스테이","파인아이앤씨","초이스렌탈","페스카로","에스엘디티","스페이스브이","뉴로핏","에누마코리아","더스윙골프","데일리샷","앱이지","이에스큐브","임플로이랩스","파이메드바이오","코디웍스","임프리메드코리아","논픽션","가레나코리아","넥써쓰","네이버웹툰","벤틀스페이스","빅픽처인터렉티브","바나나컬쳐게이밍앤미디어","딥엑스","나우에너지솔루션","유니온렌터카","뮤팟","서우시스템즈","알린스","카탈리스터","아이지에스","웨이티즈","오피지지","미토이뮨테라퓨틱스","룰루랩","스와치온","나무기술","모다플","스노우","한국인증서비스","인포유앤컴퍼니","아크로셀바이오사이언스","튜닙","인베트","코넥티브","미래야놀자","아이티센피엔에스","심플리오","에스지에이솔루션즈","두잇","엔테크서비스","신화방재","휴버텍","티원솔루션","업스테이지","바오밥테크놀로지","큐로드","한일카페트","블루엠텍","버핏서울","서울로보틱스","바이오닉스","(주)비바웨이브","올리브인터내셔널","크리에이티브멋","오지큐","올마이투어","하우저","바로팜","딥노이드","하이그라운드","트리즈커머스","스타스테크","(주)마이셰프","티엔제이","오비이랩","크로커스","엠트리센","엠투컴","리씽크","스탁키퍼","유니아텍스","모티바코리아","삼아인터내셔날","메이크볼드","세이션","블룸에이아이","스트롱홀드로보틱스","가제트코리아","아이포트폴리오","크라우드웍스","그렙","엔에이치엔애드","브리치","액션파워","퍼틸레인","씨메스","포그리트","켈스","송강인터내셔날","모인","에프앤에스홀딩스","큐피스트","하우빌드","엔에이치엔벅스","닥터다이어리","글루업","펫박스","카이트로닉스","(주)아도바","레버리지이펙트","뉴트리케어","니어스랩","씨피랩스","에이치비디지털이노베이션","아보메드","에버엑스","라운즈","스낵포","올라핀테크","빌트온","글로우데이즈","큐심플러스","나인코퍼레이션","미디어프론트","메디노드","바운드엔터테인먼트","너디스타","와인소프트","아이브","엔젤로보틱스","제이핀","브랜즈컴퍼니","코어라인소프트","브레이브컴퍼니","모스트콘텐츠","(주)엔드림","트위그팜","에이로봇","엑세스바이오","(주)퍼포마스(허브스팟)","크래프트테크놀로지스","메디에이지","(주)앱클론","에이젠글로벌","오픈엣지테크놀로지","세이브더칠드런코리아","아이언디바이스","스매치코퍼레이션","앤스페이스","비트맥스","(주)툴젠","코멘토","온피아","(주)비플랜트","테사","놈놈놈","체카","에스티씨랩","진에딧코리아(유한)","세이지","뮤즈라이브","(주)에너자이","리버스랩","티앤알바이오팹","나무씨엔에스","슈어소프트테크","닷","엔에이치엔에이스","키인사이드","힘난다","볼드코퍼레이션","애니펜","티지360테크놀로지스","엔에이치엔데이터","휴먼비엔디","죽산개발","파라메타","자이냅스","안랩클라우드메이트","텐핑","로그프레소","베가스","(주)바이젠셀","라이즈","제프","올위메이크이즈","태그바이컴퍼니","슬릭코퍼레이션","단꿈아이","플코스킨","파이노버스랩","스피링크","엔에이치엔두레이","크리마","위메이드커넥트","마켓보로","텐바이텐","제이피워런티","넷마블","이노시뮬레이션","엠피언","핏투게더","메디테라피","펫닥","위메이드플레이","디렉터스컴퍼니","식신","(주)스테나","바이오컴","용감한컴퍼니","워커스하이","웹젠","비트코퍼레이션","파트리지시스템즈","뮤직카우","집닥","뉴아이디","비브스튜디오스","센서뷰","오픈서베이","페이민트","리본즈","링크플로우","야나두","어비스컴퍼니","에바","(주)랩지노믹스","마이마부","스터닝","브라운백","(주)지에프에프지","달파","위드소프트","프린팅박스","자리컴퍼니","퍼밋","유어네임히얼","지투이","원유니버스","코다스디자인","자비스앤빌런즈","인앤아웃코퍼레이션","브로제이","디캐릭","(주)스튜디오앤뉴","로킷헬스케어","엑스오비스","커넥팅더닷츠","어글리랩","코니아랩","아이헤이트플라잉버그스","캐럿솔루션즈","쏠리드","온코소프트","(주)인핸스","위아트","21그램그룹","유일로보틱스","씨티","칼렛바이오","클라우다이크","보맵","딥서치","패스트뷰","포어시스","이브이알스튜디오","이마고웍스","아티스트컴퍼니","핀테크","(주)휴먼스케이프","에이원퍼포먼스팩토리","콘치웨어","넥슨게임즈","아인시스아이엔씨","마성","위메이드맥스","탈잉","룰루랄라","알로하팩토리","오드엠","(주)반프","락인컴퍼니","바이탈힌트코리아","순이엔티","지케스","아파트멘터리","아임웹","홈핏","뉴냅스","올림플래닛","엠젯패밀리","멋쟁이사자처럼","유비펀","휴로틱스","오지스","라이앤캐처스","셀러허브","(주)하이어다이버시티","가치공간","천명앤컴퍼니","(주)이엔셀","에임","디토닉","베스텔라랩","패스트오더글로벌","예스비","모닛","비디오빌리지","원밀리언","미소정보기술","유디엠","디알엑스","비알랩","파인더스에이아이","메타에스앤씨","해피문데이","레이지소사이어티","로위랩코리아","노르마","넥스트그라운드","어딩","퍼블리시","필름몬스터","엠키스코어","에코넥트","밀집","빌리지베이비","퀀팃","지오벤처스","엠지알브이","위에이알","혼노비","스냅태그","소다크루","기발한사람들","케이투시스템즈","보이스루","인텔리시스","파이온일렉트릭","바이비","지우컴퍼니","에스투더블유","(주)썸타임","퓨즈에이아이","(주)인포플라","오르빛알티","하이로컬","페어스퀘어랩","5민랩","브리지테일","르몽","디노마드","인진","에이치케이리더스","위즈코어","뉴엔에이아이","스마트레이더시스템","라피티","데일리앤코","컬리페이","휴비딕","인플루엔셜","에어텔닷컴","트래블월렛","코콤","퀵콜서비스","세이지그린","마리앙","전국꽃배달일일구플라워","프린트뱅크","골프존홀딩스","셀러노트","미디어젠","케어링","파타고니아코리아","푸드나무","핑크시슬리","대현에스티","라일론","안나앤블루","아싸컴","지미션","토르드라이브","티엔피인터내셔날","딜러타이어","한국통합물류협회","대한건축사협회서울시건축사회","골프존지디알아카데미","세진에듀","갤럭시아에스엠","주식회사 락플레이스","펴나니","청담글로벌","제이앤와이스타일","굿메디","디어유","타마비즈","자이언트스텝","레미떼","(주)슈퍼솔루션","맵퍼스","웰스가이드","와드","동녘","재키에프앤씨","아르고코퍼레이션","핸드허그","차일디","커버링","준주얼리","생각하는황소학원","체리코코","인솔빅","소울게임즈","얼리페이","로저나인","여인닷컴","(주)슈퍼플래닛","한국외식산업협회","르망고","우티","세븐밸리","거인기획","슈퍼커넥트","니모네트웍스","바이브온코퍼레이션","코즈웍스","윗유","갈라랩","이나웃","어나더무드","와이피랩스","바리엔유","컨텐츠월드","에스엘엑스택배(주)","더블유아일랜드","우리와","타운즈","다노","이노핀","더옷장","모빌리오","제이웍스코리아","지트시스템","골프존씨엠","마야크루","아이디언","비앤케이","토스인컴","펫프렌즈","한국식품상사","바이버","팀스파르타","야놀자파트너스","마이기어","청담엘앤에이치","(주)디자인퍼즐","케이에이씨","314호넷","나바아시아","카타고","코베아","수도석유","와이제이에듀케이션","카비오스","에밀리진","삼화에스앤티","유파운드","드림팩토리스튜디오","후즈백","모젤리","모든오피스","박차컴퍼니","인크루트","코리아포트원","에이아이에스","밍글랩","드라이버인스타","인포그린","유니온에스시에스","미스캔디","포스타입","쿠퍼실리테이션그룹","대원기공","렉티콤","아이파이브","맨즈스킨","볼라","메종모던아트뮤지엄","농업회사법인 술담화","에듀빌시스템","데일리페이","라벨영","삼신디자인","나눔시스템","컴인워시","애니텍","한국평생교육진흥협회","나무아이씨티","사이트쿡","아이클라우드(주)","유티모스트아이엔에스","민팃","업스테어스","엠게임","한그루","캡스톤자산운용","에너지엑스","컴투스","비티몰","스탠리블랙앤데커인더스트리얼코리아","제네시스랩","준인터","인티그레이션","네이버","룩소티카코리아","크레이지","반다이남코엔터테인먼트코리아","아토리서치","스타코링크","커머스랩","세컨신드롬","한국공간데이터","티에스인터내셔날코리아","한국대체투자자산운용","더블유에스피아시아리미티드","(주)에이치에프앤비","플레이링스","퍼니글루","블랙스톰","한빛소프트","코드리치","케펠자산운용","코그리코리아","디노티시아","파이어볼트","오즈인터미디어","비피엠지","빅크","소프트닉스","그램퍼스","세영디앤씨","엘엔케이로직코리아","현대산업이엔지","비엘큐","오픈플랜","쿡앱스","테이크원컴퍼니","링크드","블루사이드","브랜디드라이프스타일코리아","써클커넥션","아이엠","망고부스트코리아","시화아이디씨피에프브이","액토즈소프트","바른손이앤에이","네오위즈홀딩스","일우소프트글로벌","컴텍아시아코리아","리즈에이치디씨","아이덴티티게임즈","어베어","플래텀","포웨이시스템","블리몽키즈","유니아나","플래티어","밸런스히어로","애닉","엘알에이치알","레벨업PC","모아이게임즈","캐논크래커","유니트코리아","샌드박스네트워크","지에스지엠","유니드컴즈","굿터치","드림어스컴퍼니","손노리","칩스앤미디어","랭코드","비마이프렌즈","코맥스정보통신","스트리밍웨이","셀렉트스타","위펀","오아","삼익전자공업","브릴스","아워박스","의식주컴퍼니","와디즈","인텔리빅스","미미박스","지슨","코드스테이츠","더파이러츠","뽀득","청오엔에프 주식회사","한미사이언스","스카우트","클루닉스","디에스아이시스템","오케스트로","리팅랩스","푸드테크","빅스데이터","포트원솔루션스","레오파드락","위버스컴퍼니","아카라라이프","엠아이티","유빅소프트","팩트블록","노티플러스","소프트제국","지에스티","에스피소프트","엘디미디어플러스","하스퍼","리드포인트시스템","케이투스코리아","유원지리정보시스템","아비커스","셀러비코리아","코리아닷컴커뮤니케이션즈","웰픽","와이낫미디어","뷰노","밀크파트너스","트레져러","샐러드랩","에이포엑스","펫타버스","주봉정보시스템","패스원","티비유","에이비일팔공","폴라리스에이아이","에이치피엠글로벌","한울","렌쥴리에듀테인먼트","허니냅스","빅웨이브로보틱스","힐링브리즈","골든트리개발","소리바다","저스트큐","비트루브","엘리스그룹","퍼즐에이아이","케빈랩","미러로이드","룸시크릿","큐브렉스","힘펠","모라이","싸이크로스","식스티헤르츠","세원전설","오픈이지","디엠테크컨설팅","포인투테크놀로지","훠리스트","위밋모빌리티","시큐어링크","딥네츄럴","월드멀티넷","나비프라","스누아이랩","코난테크놀로지","엠지솔루션스","소프트힐스","에스랩아시아","한국페이즈서비스","클루커스","로비고스","새솔테크","에이트테크","창소프트아이앤아이","코클","체인앱시스","마스터스통상","이투온","웨이브온","데이터마케팅코리아","스켈터랩스","라이브데이터","(재단)엘지연암문화재단","판도플랫폼","뽐뿌커뮤니케이션","에픽코퍼레이션","그루컴퍼니","알티엠","메타보라","쿠프파이맵스","키토크에이아이","베링랩","나인와트","씨에이플래닛","위버시스템즈","에듀템","지니테크","딕스코리아","파이브웍스","비전아이","딥파인","디케이테크인","포에스텍","에스엠잉글리쉬","클로마운트","한국자동차전문가아카데미","블록체인랩스","올리브크리에이티브","데브크라","그레이드헬스체인","클레","직방","핀인사이트","웰리시스","클린씨","필라이즈","원티드랩","베텍코리아","벌스워크","본태후","파란에너지","노느니특공대엔터테인먼트","제이투와이소프트","히포티앤씨","엠투엠테크","야타브엔터","다임리서치","파워보이스","수아름","아몬드","플리닉랩스","리드젠","쇼골프","엑세스랩","피트릭스","에스에스모빌리티","로드원오원","케이스랩","메뉴잇","비에이치에스엔","에이펙스소프트","복스유니버스","이지테크핀","위데이터랩","아이에스티엔터테인먼트","데이터뱅크","코리아푸드","퍼펙트스톰","케이엠에듀","로브스터","텐박스","브레인유","비엔아이","와이비즈","국민네트웍스","우림아이씨티","두물머리","마크베이스","닥터송","세일즈인사이트","위아프렌즈","태웅로직스","단비아이엔씨","메이저맵","셀타스퀘어","세친구","퓨처메인","소키와칸","바딧","온라인팜","코라스로보틱스","아리아스튜디오","블루트리","백퍼센트","데이터크러쉬","오션스","다컴시스템","힐링페이퍼","법률사무소해내","인터마인즈","시제","앤톡","로보에테크놀로지","아이티테크","케이큐브홀딩스","마이허브","소울엑스","딥비전스","페이커즈","한국스트라이커","정책평가연구원","뉴베이스","아티웰스","클루","디씨코리아","가마","알파도","헬로긱스","에이브랩스","셀디코리아","크레스콤","에이치앤아이씨","아프스","한국렌탈(주)테크노센터","데이터블","앱테스트에이아이","치즈에이드","코스윌","디디씨파크","일루니","파이미디어랩","픽셀리티게임즈","위어드섹터","참깨연구소","버츄어라이브","프로이드","아이넥스","에피톤코리아","인피니티케어","쿼터백그룹","코드스토리","에이치제이무역","에이오팜","마인드로직","디엠티랩스","플래닝고","오썸피아","고박스","컴플렉시온","알레시오","씨앤알테크","해시스크래퍼","캐스트윈","사이오닉에이아이","어플레이즈","한비로소프트","에스엔에치","이콘비즈","하이넷네트웍스","바이칼에이아이","럽맘","공간의가치","콜리전스","엘라스틱서치코리아","테니스베이","핏미","피에프씨테크놀로지스","티에프시","에이테크","테서","랑데뷰","라프텔","유아이엠디","증권플러스비상장(주)","산호오션테크","아트랩","스텔라앤","타고모빌리티","케어스퀘어","코러스비즈니스컨설팅","엔터식스패션쇼핑몰","(주)배진산업","지오피아","디비디랩","날씬","카티어스","에이디어스","블록체인글로벌","아테크넷","이슬림코리아","가드케이","예간아이티","맑음팩토리","화진전자","위피닛솔루션","아이젠사이언스","오션파워콤","아쿠아가든","팜프로","모빅랩","공도","아미쿠스렉스","레이니가든","(주)신비서","폰에어","다인메디컬그룹","로드시스템","피스피스스튜디오","브이유에스","이크레모스","아임토리","퓨어랜드","씨엘컴퍼니","디디에이치","스마트콘","에크록스","인슈로보","파미레세","다오솔루션","빛날덴탈스튜디오","라이트비전","소테리아","칠로엔","마인즈에이아이","에이아이웨어","모니터코퍼레이션","행복한다람쥐단","히츠","인세리브로","에이조스바이오","뉴마핏","디스펙터","디씨피","필드유","마인즈에듀","위스피온","온마이뎁","인디스팟","집스","보다에이아이","뉴로다임","코르카","팬토믹스","쇼퍼하우스","스코웍스","리퀴드네이션","아이크래프트","뉴로서킷","자라소프트","디에이밍","에스프레소미디어","드랩","라이팩","유리프트","헝그리판다코리아","에이비제트","그레이비랩","딥스튜디오","아이오엔","헤세그","퓨처키친","헤이컬렉티브","릴리어스","에이인비","유모델러","법률사무소이소","포스트알파인","하이퍼리즘","인베스트인코리아","아티크론","톰발리","아워랩","하와이컴퍼니","라이프페스타","닫닫닫","에이아이닷엠","스테이션3","와이즈넛","게이머리퍼블릭","한국인디게임협회","콕스웨이브","바스바이","틴커","비씨랩스","에이프로코리아","오버다임케이","오픈메이트온","크리에이터노믹","오스카퓨쳐라","뉴로그린","마이스맥스","소셜러스","나인브이알","미르니","루덴시티","플러디","엘케이엠에스리미티드","메타본","토이소프트","록션","보임테크놀러지","온마인드","그립랩스","코인라이브","크레이지알파카","포필러스","애이마","그로윈","링거스튜디오","안드레이아","링키지랩","델리오","파운트인슈어런스","포지큐브","에이아이쓰리","웍스비","스토어링크"
+].map(name => ({고객명: name, 사업자번호: '', 타입: 'A', 비고: ''}));
+
+const B_CUSTOMERS = [
+  "(주)옵트에이아이","(주)마고","비브리지","오이스터에이블","사이퍼데이터 주식회사","주식회사 그래파이","주식회사 아이브","주식회사 에너자이","주식회사 인핸스","주식회사 일리오","주식회사 메디아이플러스","지로","아이핀랩스","도비캔버스","그린다에이아이","썸테크놀로지스코리아","(주) 쉐어박스","(주)디지털뉴트리션","(주)디지털프레소","(주)로지체인","(주)리트리버","(주)바이오바이츠","(주)사익스","(주)스위트앤데이터","(주)써큘러랩스","(주)오케이알베스트","(주)온전히","(주)옴니커넥트","(주)원체크","(주)지식과사업","(주)크랩스","(주)페보 (디디케어스)","(주)페스티벌온 (와이피아)","(주)프롬디","ExcelVision","GROOMi","Konnect Co. Ltd","Mednaath Inc","VERSE144","고트헤이븐","나그네들","나그마","이한크리에이티브(주)","익스토리","인스피리오","인핸드플러스(주)","일렉필드퓨처","임팩트연구소","자이플래닛","자일로시스템즈","제시아플랫폼","제이스케어","조인트","주)지나월드웍스","주식회사 가지랩","주식회사 고트헤이븐","주식회사 구루이엔티","주식회사 날다","주식회사 낭만아지트","주식회사 뉴지엄랩","주식회사 델로","주식회사 도자인","주식회사 딥바이오","주식회사 레츠라이트하우스","주식회사 리소리우스","주식회사 마이딜","주식회사 마크웍스","주식회사 메타크라우드","주식회사 모티","주식회사 뮤즈블라썸","주식회사 밀레니얼웍스","주식회사 부스터랩","주식회사 브로즈","주식회사 브리딩","주식회사 블라스트","주식회사 블랙후즈","주식회사 블록젠","주식회사 비포플레이","주식회사 서치독","주식회사 수트디오","주식회사 스튜디오라스","주식회사 아일로","주식회사 에이아이고리듬","오노마에이아이","카이어","주식회사 도슨티","지미션","셀파스","호미에이아이","주식회사 지미션","세상을바꾸는사람들","스콘에이아이","스타일쿡","스페이스플로","스포츠클립에이아이","슬로웨이브","신선고","아르토에이아이","아뮤즈8","아이쉐어넷","아이씨 주식회사","아폴로스튜디오코리아","에스큐케이 주식회사","에이닷큐어","에이아이바","에이아이오아이에이 주식회사","에이플라","엑스업","엑스크루","엔터테이크","영앤","오로라팩토리","옥토브","온엣","올커넥","옴니스토리","원테크월드와이드","위아패밀리","위앤디오에스","유저커넥트","이디엠가젯","이터너스","포어텔마이헬스","퓨처워크랩 주식회사","플레이콘","페어리","(주)인포플라","르몽","(주)컨포트랩","(주)딥오토","오믈렛","토글캠퍼스","스마트마인드 주식회사","주식회사 도우","하이어다이버시티","피오유엘","하얀마인드","허슬러즈","헤드리스 주식회사","훈훈소프트","흰당나귀","시티아이랩","필드유","시제","미러로이드","알리고에이아이","바티에이아이","북엔드","피카디","스트라","오모션","틸다","(주)루나르트","(주)리얼드로우","(주)포그","(주)필드유","주식회사 딥히어링","주식회사 버시스","주식회사 북엔드","주식회사 스타씨드","주식회사 앤트","타이디비 주식회사","하와이컴퍼니 주식회사","페스트페이스","페스티벌온","주식회사 에프오에프","주식회사 원메딧","주식회사 웨이브샤인테크","주식회사 인스킨랩","주식회사 제틱에이아이","주식회사 지엔","주식회사 캐피탈레터","주식회사 컨시언스파트너스","주식회사 큐팁","주식회사 큰삼촌컴퍼니","주식회사 킨사이트","주식회사 팀스팟","주식회사 프레쉬아워","주식회사 프레시아워","주식회사 프롬프트타운","주식회사 프리딕션","주식회사 피카부랩스","주식회사 하이퍼마인드","주식회사반려동물","증강지능","컬리지니에이아이","컴퍼니에이","케어포유","코드넛","코머스","코머스인터내셔날","퀀텀점프클럽","퀀텀하이텍","크디랩(SoKind)","크로스허브","클라이머스","클레어옵틱","킵코퍼레이션","테딘","테크레디","티제이랩스","팀리미티드","팀스페이스팜","팀카이","판티마","팝스라인","넥스트웨이브","(주)넥스트인텔리전스닷에이아이","뉴지엄랩","닥터프레소","대한안전보건교육원","더미라클소프트","더블렌드","데이트리스","도도한콜라보(주)","돌봄드림","드래프타입","디라이브 주식회사","디지털뉴트리션","딱플 주식회사","라온데이터","래티스","레티튜","로엔코리아","루카스에듀테인먼트","리스트북","리얼타임메디체크","매니패스트㈜ (리오랩)","리오랩","리포츠","말과학놀이터 주식회사","맨인블록 주식회사","메디칼솔루션시스템","모비","모티프드라이브","뮤즈블라썸","바이에너지","바이오바이츠","밤볼","벅스컨설팅","브랜즈모어","브로즈","브리딩","블루룸","비디오몬스터","비욘드오션","서치라이트에이아이(주)","세레스테크놀로지스"
+].map(name => ({고객명: name, 사업자번호: '', 타입: 'B', 비고: ''}));
+
+let customers = [...CUSTOMERS_DEFAULT, ...B_CUSTOMERS];
+let activities = [];
+
+// ──────────────── INIT ────────────────
+document.getElementById('headerDate').textContent = new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
+document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+
+// ──────────────── JSONBIN 설정 ────────────────
+const BIN_ID = '69e7094f856a6821895708ff';
+const API_KEY = '$2a$10$2DhzNG6g0qogaKZqE.//mOzUMR5YzSinWARerhL0lyryj.Ao2Vkpa';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+async function loadFromBin() {
+  try {
+    showSyncStatus('loading');
+    const res = await fetch(BIN_URL + '/latest', {
+      headers: { 'X-Master-Key': API_KEY }
+    });
+    const json = await res.json();
+    activities = json.record.activities || [];
+    renderActivityTable();
+    refreshDash();
+    renderCustomerTable(customers);
+    showSyncStatus('ok');
+  } catch(e) {
+    showSyncStatus('error');
+    showToast('⚠️', '데이터 불러오기 실패. 네트워크를 확인해주세요');
+  }
+}
+
+async function saveToBin() {
+  try {
+    showSyncStatus('saving');
+    await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': API_KEY
+      },
+      body: JSON.stringify({ activities })
+    });
+    showSyncStatus('ok');
+  } catch(e) {
+    showSyncStatus('error');
+    showToast('⚠️', '저장 실패. 네트워크를 확인해주세요');
+  }
+}
+
+function showSyncStatus(state) {
+  const el = document.getElementById('sync-status');
+  if(!el) return;
+  const map = {
+    loading: ['🔄', '불러오는 중...', '#64748b'],
+    saving:  ['💾', '저장 중...',     '#d97706'],
+    ok:      ['✅', '동기화 완료',    '#16a34a'],
+    error:   ['❌', '동기화 오류',    '#dc2626'],
+  };
+  const [icon, text, color] = map[state];
+  el.innerHTML = `<span>${icon}</span> <span style="color:${color}">${text}</span>`;
+}
+
+// 초기 로드: JSONBin에서 활동 데이터 가져오기
+renderAll();
+loadFromBin();
+
+// ──────────────── TABS ────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['dashboard','activity','customers'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if(name==='dashboard') refreshDash();
+}
+
+// ──────────────── RENDER ────────────────
+function renderAll() {
+  refreshDash();
+  renderActivityTable();
+  renderCustomerTable(customers);
+}
+
+function refreshDash() {
+  // 고객을 타입별로 분리 (엑셀 컬럼 '타입' 또는 'type' 기준, 없으면 전부 A타입으로 처리)
+  const getType = c => {
+    const t = (c['타입'] || c['type'] || c['TYPE'] || '').toString().trim().toUpperCase();
+    return t === 'B' ? 'B' : 'A';
+  };
+  const custA = customers.filter(c => getType(c) === 'A');
+  const custB = customers.filter(c => getType(c) === 'B');
+
+  // 활동도 타입별 분리 (activity에 customerType 저장)
+  const actA = activities.filter(a => a.customerType !== 'B');
+  const actB = activities.filter(a => a.customerType === 'B');
+
+  function calcKpi(cust, acts, prefix) {
+    const total = cust.length;
+    const visited = new Set(acts.map(a=>a.customer)).size;
+    const remain = Math.max(0, total - visited);
+    const orders = acts.filter(a => a.reaction === '수주 확정').length;
+    const amount = acts.reduce((s,a) => s + (parseFloat(a.amount)||0), 0);
+    document.getElementById(`kpi-${prefix}-total`).textContent = total.toLocaleString();
+    document.getElementById(`kpi-${prefix}-visited`).textContent = visited.toLocaleString();
+    document.getElementById(`kpi-${prefix}-visited-rate`).textContent = total ? `진척률 ${Math.round(visited/total*100)}%` : '–';
+    document.getElementById(`kpi-${prefix}-remain`).textContent = remain.toLocaleString();
+    document.getElementById(`kpi-${prefix}-orders`).textContent = orders.toLocaleString();
+    document.getElementById(`kpi-${prefix}-orders-rate`).textContent = visited ? `전환율 ${Math.round(orders/visited*100)}%` : '–';
+    document.getElementById(`kpi-${prefix}-amount`).textContent = amount % 1 === 0 ? amount.toLocaleString() : amount.toFixed(1);
+  }
+  calcKpi(custA, actA, 'a');
+  calcKpi(custB, actB, 'b');
+
+  const totalActs = activities.length;
+
+  // Rep bars
+  const reps = ['추승훈','강소연','김나정','안수진','이정민','김윤환'];
+  const repColors = ['#3b82f6','#22c55e','#f59e0b','#a78bfa','#ef4444','#06b6d4'];
+  const repCounts = reps.map(r => activities.filter(a=>a.rep===r).length);
+  const maxCount = Math.max(...repCounts, 1);
+
+  const barsEl = document.getElementById('rep-bars');
+  if(totalActs === 0) {
+    barsEl.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>';
+  } else {
+    barsEl.innerHTML = reps.map((r,i) => `
+      <div class="bar-item">
+        <div class="bar-header">
+          <span class="bar-name">${r}</span>
+          <span class="bar-val">${repCounts[i]}건</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${repCounts[i]/maxCount*100}%;background:${repColors[i]};"></div>
+        </div>
+      </div>`).join('');
+  }
+
+  // Reaction dist
+  const reactionMap = {};
+  activities.forEach(a => { if(a.reaction) reactionMap[a.reaction] = (reactionMap[a.reaction]||0)+1; });
+  const reactEl = document.getElementById('reaction-dist');
+  if(!totalActs) {
+    reactEl.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">영업활동 데이터 없음</div>';
+  } else {
+    const total2 = activities.filter(a=>a.reaction).length || 1;
+    const colorMap = {'매우 긍정적':'#22c55e','긍정적':'#86efac','보통':'#f59e0b','부정적':'#ef4444','무반응':'#6e7681','수주 확정':'#3b82f6','재방문 필요':'#a78bfa'};
+    reactEl.innerHTML = '<div class="bar-list">' + Object.entries(reactionMap).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `
+      <div class="bar-item">
+        <div class="bar-header"><span class="bar-name">${k}</span><span class="bar-val">${v}건 (${Math.round(v/total2*100)}%)</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${v/total2*100}%;background:${colorMap[k]||'#3b82f6'};"></div></div>
+      </div>`).join('') + '</div>';
+  }
+
+  // Recent
+  const recentEl = document.getElementById('recent-activity');
+  const recent = [...activities].sort((a,b)=>b.id-a.id).slice(0,10);
+  if(!recent.length) {
+    recentEl.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">등록된 영업활동 없음</div>';
+  } else {
+    const reactionBadge = r => {
+      if(!r) return '';
+      if(['매우 긍정적','긍정적'].includes(r)) return `<span class="badge badge-green">${r}</span>`;
+      if(['부정적','무반응'].includes(r)) return `<span class="badge badge-red">${r}</span>`;
+      if(r==='수주 확정') return `<span class="badge badge-blue">${r}</span>`;
+      if(r==='재방문 필요') return `<span class="badge badge-purple">${r}</span>`;
+      return `<span class="badge badge-yellow">${r}</span>`;
+    };
+    recentEl.innerHTML = '<div class="activity-list">' + recent.map(a => `
+      <div class="activity-item">
+        <div class="activity-dot" style="background:${a.reaction==='수주 확정'?'var(--accent)':a.reaction&&['매우 긍정적','긍정적'].includes(a.reaction)?'var(--green)':'var(--border2)'}"></div>
+        <div class="activity-info">
+          <div class="activity-name">${a.customer} <span style="color:var(--text3);font-weight:400;font-size:11px;">${a.type||''}</span></div>
+          <div class="activity-desc">${a.rep} · ${a.memo||'메모 없음'}</div>
+        </div>
+        ${reactionBadge(a.reaction)}
+        ${a.amount?`<span class="badge badge-green">${a.amount}억</span>`:''}
+        <div class="activity-time">${a.date}</div>
+      </div>`).join('') + '</div>';
+  }
+}
+
+// ──────────────── ACTIVITY ────────────────
+function selectReaction(el) {
+  document.querySelectorAll('.reaction-chip').forEach(c => c.className='reaction-chip');
+  el.classList.add('active-'+el.dataset.type);
+  selectedReaction = el.dataset.val;
+  document.getElementById('f-reaction').value = selectedReaction;
+}
+
+function getCustomerName(c) {
+  return c['고객명'] || c['고객사명'] || c[Object.keys(c)[1]] || c[Object.keys(c)[0]] || '';
+}
+
+function filterCustomers(val) {
+  const dd = document.getElementById('customer-dropdown');
+  if(!val.trim()) { dd.classList.remove('open'); return; }
+  const filtered = customers.filter(c => getCustomerName(c).toLowerCase().includes(val.toLowerCase())).slice(0,30);
+  if(!filtered.length) { dd.innerHTML='<div class="search-option" style="cursor:default;color:var(--text3);">검색 결과 없음</div>'; dd.classList.add('open'); return; }
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const re = new RegExp(`(${esc(val)})`,'gi');
+  dd.innerHTML = filtered.map(c => {
+    const name = getCustomerName(c);
+    const biz = c['사업자번호'] ? `<span style="color:var(--text3);font-size:11px;margin-left:6px;">${c['사업자번호']}</span>` : '';
+    return `<div class="search-option" onmousedown="selectCustomer('${name.replace(/'/g,"\\'")}',this)">${name.replace(re,'<mark>$1</mark>')}${biz}</div>`;
+  }).join('');
+  dd.classList.add('open');
+}
+
+function selectCustomer(name, el) {
+  document.getElementById('f-customer-input').value = name;
+  document.getElementById('f-customer-val').value = name;
+  document.getElementById('customer-dropdown').classList.remove('open');
+}
+function showDropdown() { if(document.getElementById('f-customer-input').value) filterCustomers(document.getElementById('f-customer-input').value); }
+function hideDropdown() { setTimeout(()=>document.getElementById('customer-dropdown').classList.remove('open'),200); }
+
+async function submitActivity() {
+  const rep = document.getElementById('f-rep').value;
+  const customer = document.getElementById('f-customer-val').value || document.getElementById('f-customer-input').value;
+  const type = document.getElementById('f-type').value;
+  const date = document.getElementById('f-date').value;
+  if(!rep) { showToast('⚠️','영업사원을 선택해주세요'); return; }
+  if(!customer) { showToast('⚠️','고객사를 입력해주세요'); return; }
+  if(!date) { showToast('⚠️','활동일을 입력해주세요'); return; }
+
+  const act = {
+    id: Date.now(),
+    date, rep, customer, type,
+    customerType: (() => {
+      const found = customers.find(c => {
+        const name = c['고객사명'] || c[Object.keys(c)[0]] || '';
+        return name === customer;
+      });
+      if(!found) return 'A';
+      const t = (found['타입'] || found['type'] || found['TYPE'] || '').toString().trim().toUpperCase();
+      return t === 'B' ? 'B' : 'A';
+    })(),
+    reaction: document.getElementById('f-reaction').value,
+    amount: document.getElementById('f-amount').value,
+    memo: document.getElementById('f-memo').value
+  };
+  activities.unshift(act);
+  renderActivityTable();
+  refreshDash();
+  resetForm();
+  showToast('✓','영업활동이 등록되었습니다');
+  await saveToBin();
+}
+
+function resetForm() {
+  ['f-rep','f-type','f-memo','f-amount'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('f-customer-input').value='';
+  document.getElementById('f-customer-val').value='';
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  document.querySelectorAll('.reaction-chip').forEach(c=>c.className='reaction-chip');
+  selectedReaction='';
+}
+
+function renderActivityTable() {
+  const tbody = document.getElementById('activity-tbody');
+  document.getElementById('act-count').textContent = activities.length+'건';
+  if(!activities.length) {
+    tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px;">등록된 활동 없음</td></tr>';
+    return;
+  }
+  const reactionBadge = r => {
+    if(!r) return '<span style="color:var(--text3)">–</span>';
+    if(['매우 긍정적','긍정적'].includes(r)) return `<span class="badge badge-green">${r}</span>`;
+    if(['부정적','무반응'].includes(r)) return `<span class="badge badge-red">${r}</span>`;
+    if(r==='수주 확정') return `<span class="badge badge-blue">${r}</span>`;
+    if(r==='재방문 필요') return `<span class="badge badge-purple">${r}</span>`;
+    return `<span class="badge badge-yellow">${r}</span>`;
+  };
+  tbody.innerHTML = activities.map(a => `
+    <tr>
+      <td style="font-family:var(--mono);font-size:12px;">${a.date}</td>
+      <td class="td-name">${a.rep}</td>
+      <td class="td-name">${a.customer}</td>
+      <td><span class="badge badge-blue">${a.type||'–'}</span></td>
+      <td>${reactionBadge(a.reaction)}</td>
+      <td style="font-family:var(--mono);color:var(--green);">${a.amount?a.amount+'억':'–'}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text3);" title="${a.memo||''}">${a.memo||'–'}</td>
+      <td><button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red-bg);" onclick="deleteActivity(${a.id})">삭제</button></td>
+    </tr>`).join('');
+}
+
+async function deleteActivity(id) {
+  activities = activities.filter(a=>a.id!==id);
+  renderActivityTable(); refreshDash();
+  showToast('🗑️','삭제되었습니다');
+  await saveToBin();
+}
+
+// ──────────────── CUSTOMERS ────────────────
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  processFile(file);
+  e.target.value='';
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if(file) processFile(file);
+}
+
+function processFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  if(ext === 'csv') {
+    // CSV: UTF-8 먼저 시도, 실패 시 EUC-KR 재시도
+    const tryRead = (encoding) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = ev => resolve(ev.target.result);
+      reader.onerror = reject;
+      reader.readAsText(file, encoding);
+    });
+    tryRead('UTF-8').then(text => {
+      // BOM 제거
+      const clean = text.replace(/^\uFEFF/, '');
+      // 한글이 깨진 것 같으면 EUC-KR 재시도
+      if(clean.includes('') || (clean.charCodeAt(0) > 0xFFFD)) {
+        return tryRead('EUC-KR');
+      }
+      return clean;
+    }).then(text => {
+      parseCSVData(text.replace(/^\uFEFF/, ''));
+    }).catch(() => showToast('⚠️','CSV 파일을 읽을 수 없습니다'));
+
+  } else {
+    // XLSX/XLS: ArrayBuffer 방식 (BinaryString보다 안정적)
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const wb = XLSX.read(ev.target.result, {
+          type: 'array',
+          cellDates: true,
+          cellNF: false,
+          cellText: false
+        });
+        const sheetName = wb.SheetNames[0];
+        const ws = wb.Sheets[sheetName];
+        // 양식 템플릿: 1~3행은 안내/타이틀, 4행부터 헤더+데이터
+        const data = XLSX.utils.sheet_to_json(ws, {
+          defval: '',
+          raw: false,
+          range: 3   // 0-based: row index 3 = 4번째 행부터 파싱
+        });
+        // 샘플 데이터(예시기업) 제외
+        const filtered = data.filter(r => {
+          const name = String(r['고객명'] || r[Object.keys(r)[1]] || '');
+          return name && !name.includes('예시기업');
+        });
+        if(!filtered.length) {
+          showToast('⚠️', '입력된 고객 데이터가 없습니다. 샘플 행을 지우고 실제 데이터를 입력해주세요');
+          return;
+        }
+        loadCustomers(filtered);
+      } catch(err) {
+        console.error('XLSX parse error:', err);
+        showToast('⚠️','파일 파싱 오류: ' + (err.message || '알 수 없는 오류'));
+      }
+    };
+    reader.onerror = () => showToast('⚠️','파일을 읽을 수 없습니다');
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+function parseCSVData(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if(lines.length < 2) { showToast('⚠️','데이터가 없습니다 (헤더+1행 이상 필요)'); return; }
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  const data = lines.slice(1)
+    .map(line => {
+      // 쉼표가 따옴표 안에 있는 경우 처리
+      const vals = [];
+      let inQ = false, cur = '';
+      for(let ch of line) {
+        if(ch==='"') { inQ=!inQ; }
+        else if(ch===',' && !inQ) { vals.push(cur.trim()); cur=''; }
+        else { cur+=ch; }
+      }
+      vals.push(cur.trim());
+      const obj = {};
+      headers.forEach((h,i) => obj[h] = (vals[i]||'').replace(/^"|"$/g,''));
+      return obj;
+    })
+    .filter(r => Object.values(r).some(v => v !== ''));
+  loadCustomers(data);
+}
+
+function loadCustomers(data) {
+  customers = data;
+  try { localStorage.setItem('tf_customers', JSON.stringify(customers)); } catch(e){}
+  renderCustomerTable(customers);
+  refreshDash();
+  showToast('✓', `${customers.length}개 고객사 업로드 완료`);
+}
+
+function renderCustomerTable(data) {
+  // A/B 카운트 업데이트
+  const aCount = customers.filter(c=>c.타입==='A').length;
+  const bCount = customers.filter(c=>c.타입==='B').length;
+  document.getElementById('count-a').textContent = aCount.toLocaleString();
+  document.getElementById('count-b').textContent = bCount.toLocaleString();
+  document.getElementById('customer-count').textContent = data.length+'개사';
+
+  const wrap = document.getElementById('customer-table-wrap');
+  if(!data.length) {
+    wrap.innerHTML='<div class="empty-state"><div class="icon">🔍</div><p>검색 결과가 없습니다</p></div>';
+    return;
+  }
+  const reactionBadge = name => {
+    const acts = activities.filter(a => a.customer === name);
+    if(!acts.length) return '<span style="color:var(--text3);font-size:11px;">미방문</span>';
+    const last = acts.sort((a,b)=>b.id-a.id)[0];
+    if(last.reaction==='수주 확정') return '<span class="badge badge-blue">수주 확정</span>';
+    if(['매우 긍정적','긍정적'].includes(last.reaction)) return '<span class="badge badge-green">'+last.reaction+'</span>';
+    if(['부정적','무반응'].includes(last.reaction)) return '<span class="badge badge-red">'+last.reaction+'</span>';
+    if(last.reaction) return '<span class="badge badge-yellow">'+last.reaction+'</span>';
+    return '<span class="badge badge-blue">방문완료</span>';
+  };
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th style="width:40px">#</th>
+      <th>고객명</th>
+      <th style="width:70px">타입</th>
+      <th style="width:110px">방문 현황</th>
+      <th style="width:80px">방문 횟수</th>
+    </tr></thead>
+    <tbody>${data.map((row,i) => {
+      const actCount = activities.filter(a=>a.customer===row.고객명).length;
+      const typeBadge = row.타입==='B'
+        ? '<span class="badge badge-purple">B</span>'
+        : '<span class="badge badge-blue">A</span>';
+      return `<tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--text3)">${i+1}</td>
+        <td class="td-name">${row.고객명}</td>
+        <td>${typeBadge}</td>
+        <td>${reactionBadge(row.고객명)}</td>
+        <td style="font-family:var(--mono);text-align:center;">${actCount > 0 ? actCount+'회' : '–'}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+let _typeFilter = '';
+function filterCustomerTable(val, typeFilter) {
+  if(typeFilter !== undefined) _typeFilter = typeFilter;
+  let filtered = customers;
+  if(_typeFilter) filtered = filtered.filter(c => c.타입 === _typeFilter);
+  if(val && val.trim()) filtered = filtered.filter(c => c.고객명.toLowerCase().includes(val.toLowerCase()));
+  renderCustomerTable(filtered);
+}
+
+function exportCSV() {
+  if(!customers.length) { showToast('⚠️','내보낼 데이터가 없습니다'); return; }
+  const cols = Object.keys(customers[0]);
+  const rows = [cols.join(','), ...customers.map(r=>cols.map(c=>`"${r[c]||''}"`).join(','))];
+  const blob = new Blob(['\uFEFF'+rows.join('\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='고객현황.csv'; a.click();
+}
+
+// ──────────────── TOAST ────────────────
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
