@@ -277,8 +277,32 @@
   .modal-footer {
     padding:14px 22px;
     border-top:1px solid var(--border);
-    display:flex; justify-content:flex-end;
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
   }
+  .modal-edit-field {
+    width:100%;
+    background:var(--surface2);
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:8px 12px;
+    color:var(--text);
+    font-family:var(--font);
+    font-size:13px;
+    outline:none;
+    transition:border-color 0.2s;
+  }
+  .modal-edit-field:focus { border-color:var(--accent); }
+  select.modal-edit-field option { background:var(--surface2); }
+  textarea.modal-edit-field { resize:vertical; min-height:70px; }
+  .modal-edit-pain { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .modal-pain-chip {
+    padding:5px 12px; border-radius:20px;
+    border:1px solid var(--border); font-size:11px;
+    cursor:pointer; color:var(--text2); background:var(--surface2);
+    transition:all 0.15s;
+  }
+  .modal-pain-chip:hover { border-color:var(--border2); color:var(--text); }
+  .modal-pain-chip.on { border-color:var(--yellow); background:var(--yellow-bg); color:var(--yellow); }
   .activity-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
   .activity-info { flex:1; }
   .activity-name { font-weight:500; color:var(--text); }
@@ -808,7 +832,7 @@
 
 <!-- 상세 팝업 모달 -->
 <div class="modal-overlay" id="actModal" onclick="closeModal(event)">
-  <div class="modal">
+  <div class="modal" style="width:520px;">
     <div class="modal-header">
       <div>
         <div class="modal-title" id="modal-customer">–</div>
@@ -817,33 +841,76 @@
       <button class="modal-close" onclick="closeModal(null)">✕</button>
     </div>
     <div class="modal-body">
+
+      <!-- 활동일 -->
       <div class="modal-row">
         <span class="modal-label">활동일</span>
-        <span class="modal-val" id="modal-date">–</span>
+        <span class="modal-val" id="modal-date-view">–</span>
+        <input type="date" class="modal-edit-field" id="modal-date-edit" style="display:none;">
       </div>
+
+      <!-- 영업사원 -->
       <div class="modal-row">
         <span class="modal-label">영업사원</span>
-        <span class="modal-val" id="modal-rep">–</span>
+        <span class="modal-val" id="modal-rep-view">–</span>
+        <select class="modal-edit-field" id="modal-rep-edit" style="display:none;">
+          <option>추승훈</option><option>강소연</option><option>정예진</option>
+          <option>김나정</option><option>안수진</option><option>이정민</option><option>김윤환</option>
+        </select>
       </div>
+
+      <!-- 활동유형 -->
       <div class="modal-row">
         <span class="modal-label">활동유형</span>
-        <span class="modal-val" id="modal-type">–</span>
+        <span class="modal-val" id="modal-type-view">–</span>
+        <select class="modal-edit-field" id="modal-type-edit" style="display:none;">
+          <option>방문 미팅</option><option>전화</option><option>이메일</option>
+          <option>화상 미팅</option><option>제안서 발송</option><option>계약 체결</option>
+        </select>
       </div>
+
+      <!-- 고객 타입 -->
       <div class="modal-row">
         <span class="modal-label">고객 타입</span>
         <span class="modal-val" id="modal-ctype">–</span>
       </div>
+
+      <!-- PainPoint -->
       <div class="modal-row" id="modal-pain-row">
         <span class="modal-label">PainPoint</span>
-        <div class="modal-val modal-pain-tags" id="modal-pain">–</div>
+        <div class="modal-val">
+          <div class="modal-pain-tags" id="modal-pain-view">–</div>
+          <div class="modal-edit-pain" id="modal-pain-edit" style="display:none;">
+            <span class="modal-pain-chip" data-val="비용부담" onclick="toggleModalPain(this)">💰 비용부담</span>
+            <span class="modal-pain-chip" data-val="서비스 복잡성&관리 어려움" onclick="toggleModalPain(this)">🔧 서비스 복잡성&amp;관리 어려움</span>
+            <span class="modal-pain-chip" data-val="장애/다운타임 리스크" onclick="toggleModalPain(this)">⚡ 장애/다운타임 리스크</span>
+            <span class="modal-pain-chip" data-val="보안 불안" onclick="toggleModalPain(this)">🔒 보안 불안</span>
+            <span class="modal-pain-chip" data-val="확장성 부족" onclick="toggleModalPain(this)">📈 확장성 부족</span>
+            <span class="modal-pain-chip" data-val="내부 IT 인력 부족" onclick="toggleModalPain(this)">👥 내부 IT 인력 부족</span>
+          </div>
+        </div>
       </div>
+
+      <!-- 활동 내용 -->
       <div class="modal-row">
         <span class="modal-label">활동 내용</span>
-        <span class="modal-val" id="modal-memo" style="white-space:pre-wrap;">–</span>
+        <span class="modal-val" id="modal-memo-view" style="white-space:pre-wrap;">–</span>
+        <textarea class="modal-edit-field" id="modal-memo-edit" style="display:none;" rows="3"></textarea>
       </div>
+
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline btn-sm" onclick="closeModal(null)">닫기</button>
+      <div>
+        <button class="btn btn-outline btn-sm" id="modal-delete-btn"
+          style="color:var(--red);border-color:var(--red-bg);"
+          onclick="deleteFromModal()">🗑 삭제</button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="closeModal(null)" id="modal-close-btn">닫기</button>
+        <button class="btn btn-outline btn-sm" id="modal-edit-btn" onclick="startModalEdit()" style="color:var(--accent);border-color:var(--accent-glow);">✏️ 수정</button>
+        <button class="btn btn-primary btn-sm" id="modal-save-btn" style="display:none;" onclick="saveModalEdit()">💾 저장</button>
+        <button class="btn btn-outline btn-sm" id="modal-cancel-btn" style="display:none;" onclick="cancelModalEdit()">취소</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1013,6 +1080,7 @@ function refreshDash() {
       </div>`;
     }).join('') + '</div>';
   }
+
   // ── 최근 영업활동 ──
   const recentEl = document.getElementById('recent-activity');
   const recent = [...activities].sort((a,b)=>b.id-a.id).slice(0,10);
@@ -1122,14 +1190,14 @@ function renderActivityTable() {
   const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
   tbody.innerHTML = activities.map(a => {
     const painTags = a.pain ? a.pain.split(',').filter(Boolean).map(p=>`<span class="badge badge-yellow" style="margin:1px;font-size:10px;">${p}</span>`).join('') : '–';
-    return `<tr>
+    return `<tr style="cursor:pointer;" onclick="openModal(${a.id})" title="클릭하여 상세보기/수정">
       <td style="font-family:var(--mono);font-size:12px;white-space:nowrap;">${a.date}</td>
       <td class="td-name">${a.rep}</td>
       <td class="td-name">${a.customer}</td>
       <td><span class="badge ${typeColor(a.type)}">${a.type||'–'}</span></td>
       <td style="max-width:200px;">${painTags}</td>
       <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2);" title="${a.memo||''}">${a.memo||'–'}</td>
-      <td><button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red-bg);" onclick="deleteActivity(${a.id})">삭제</button></td>
+      <td onclick="event.stopPropagation()"><button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red-bg);" onclick="deleteActivity(${a.id})">삭제</button></td>
     </tr>`;
   }).join('');
 }
@@ -1330,29 +1398,133 @@ function exportCSV() {
 }
 
 // ──────────────── MODAL ────────────────
+let _modalId = null;
+
 function openModal(id) {
   const a = activities.find(x => x.id === id);
   if(!a) return;
+  _modalId = id;
+
   const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
-  document.getElementById('modal-customer').textContent  = a.customer || '–';
-  document.getElementById('modal-type-badge').innerHTML  = a.type ? `<span class="badge ${typeColor(a.type)}">${a.type}</span>` : '';
-  document.getElementById('modal-date').textContent      = a.date || '–';
-  document.getElementById('modal-rep').textContent       = a.rep || '–';
-  document.getElementById('modal-type').textContent      = a.type || '–';
-  document.getElementById('modal-ctype').innerHTML       = a.customerType === 'B'
+
+  // 헤더
+  document.getElementById('modal-customer').textContent = a.customer || '–';
+  document.getElementById('modal-type-badge').innerHTML = a.type ? `<span class="badge ${typeColor(a.type)}">${a.type}</span>` : '';
+
+  // 뷰 모드 값
+  document.getElementById('modal-date-view').textContent = a.date || '–';
+  document.getElementById('modal-rep-view').textContent  = a.rep || '–';
+  document.getElementById('modal-type-view').textContent = a.type || '–';
+  document.getElementById('modal-ctype').innerHTML = a.customerType === 'B'
     ? '<span class="badge badge-purple">B타입 · Shift 참여 스타트업</span>'
     : '<span class="badge badge-blue">A타입 · 미발굴 타겟</span>';
-  const painEl = document.getElementById('modal-pain');
-  if(a.pain && a.pain.trim()) {
-    painEl.innerHTML = a.pain.split(',').filter(Boolean)
-      .map(p => `<span class="badge badge-yellow">${p}</span>`).join('');
-    document.getElementById('modal-pain-row').style.display = 'flex';
-  } else {
-    painEl.textContent = '–';
-    document.getElementById('modal-pain-row').style.display = 'flex';
-  }
-  document.getElementById('modal-memo').textContent = a.memo || '활동 내용 없음';
+  const painView = document.getElementById('modal-pain-view');
+  painView.innerHTML = (a.pain && a.pain.trim())
+    ? a.pain.split(',').filter(Boolean).map(p=>`<span class="badge badge-yellow">${p}</span>`).join('')
+    : '<span style="color:var(--text3)">–</span>';
+  document.getElementById('modal-memo-view').textContent = a.memo || '–';
+
+  // 편집 모드 초기값
+  document.getElementById('modal-date-edit').value = a.date || '';
+  document.getElementById('modal-rep-edit').value  = a.rep || '';
+  document.getElementById('modal-type-edit').value = a.type || '';
+  document.getElementById('modal-memo-edit').value = a.memo || '';
+
+  // Pain chip 초기화
+  const chips = document.querySelectorAll('.modal-pain-chip');
+  const pains = a.pain ? a.pain.split(',').filter(Boolean) : [];
+  chips.forEach(c => c.classList.toggle('on', pains.includes(c.dataset.val)));
+
+  // 뷰 모드로 시작
+  setModalViewMode();
   document.getElementById('actModal').classList.add('open');
+}
+
+function setModalViewMode() {
+  ['date','rep','type','memo'].forEach(f => {
+    document.getElementById(`modal-${f}-view`).style.display = '';
+    document.getElementById(`modal-${f}-edit`).style.display = 'none';
+  });
+  document.getElementById('modal-pain-view').style.display = '';
+  document.getElementById('modal-pain-edit').style.display = 'none';
+  document.getElementById('modal-edit-btn').style.display  = '';
+  document.getElementById('modal-save-btn').style.display  = 'none';
+  document.getElementById('modal-cancel-btn').style.display = 'none';
+}
+
+function startModalEdit() {
+  ['date','rep','type','memo'].forEach(f => {
+    document.getElementById(`modal-${f}-view`).style.display = 'none';
+    document.getElementById(`modal-${f}-edit`).style.display = '';
+  });
+  document.getElementById('modal-pain-view').style.display = 'none';
+  document.getElementById('modal-pain-edit').style.display = 'flex';
+  document.getElementById('modal-edit-btn').style.display  = 'none';
+  document.getElementById('modal-save-btn').style.display  = '';
+  document.getElementById('modal-cancel-btn').style.display = '';
+}
+
+function cancelModalEdit() {
+  // 원래 값으로 복원
+  const a = activities.find(x => x.id === _modalId);
+  if(a) {
+    document.getElementById('modal-date-edit').value = a.date || '';
+    document.getElementById('modal-rep-edit').value  = a.rep || '';
+    document.getElementById('modal-type-edit').value = a.type || '';
+    document.getElementById('modal-memo-edit').value = a.memo || '';
+    const chips = document.querySelectorAll('.modal-pain-chip');
+    const pains = a.pain ? a.pain.split(',').filter(Boolean) : [];
+    chips.forEach(c => c.classList.toggle('on', pains.includes(c.dataset.val)));
+  }
+  setModalViewMode();
+}
+
+async function saveModalEdit() {
+  const idx = activities.findIndex(x => x.id === _modalId);
+  if(idx === -1) return;
+
+  const newPain = [...document.querySelectorAll('.modal-pain-chip.on')].map(c=>c.dataset.val).join(',');
+  const newType = document.getElementById('modal-type-edit').value;
+
+  activities[idx] = {
+    ...activities[idx],
+    date: document.getElementById('modal-date-edit').value,
+    rep:  document.getElementById('modal-rep-edit').value,
+    type: newType,
+    pain: newPain,
+    memo: document.getElementById('modal-memo-edit').value,
+  };
+
+  // 모달 헤더·뷰 갱신
+  const a = activities[idx];
+  const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
+  document.getElementById('modal-type-badge').innerHTML = `<span class="badge ${typeColor(newType)}">${newType}</span>`;
+  document.getElementById('modal-date-view').textContent = a.date;
+  document.getElementById('modal-rep-view').textContent  = a.rep;
+  document.getElementById('modal-type-view').textContent = a.type;
+  document.getElementById('modal-pain-view').innerHTML   = newPain
+    ? newPain.split(',').filter(Boolean).map(p=>`<span class="badge badge-yellow">${p}</span>`).join('')
+    : '<span style="color:var(--text3)">–</span>';
+  document.getElementById('modal-memo-view').textContent = a.memo || '–';
+
+  setModalViewMode();
+  renderActivityTable();
+  refreshDash();
+  showToast('✓','수정되었습니다');
+  await saveToBin();
+}
+
+function deleteFromModal() {
+  if(!confirm('이 활동 내역을 삭제하시겠습니까?')) return;
+  activities = activities.filter(a => a.id !== _modalId);
+  document.getElementById('actModal').classList.remove('open');
+  renderActivityTable(); refreshDash();
+  showToast('🗑️','삭제되었습니다');
+  saveToBin();
+}
+
+function toggleModalPain(el) {
+  el.classList.toggle('on');
 }
 
 function closeModal(e) {
