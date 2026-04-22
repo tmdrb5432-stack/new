@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>신성장고객발굴 TF — 영업 대시보드</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f0f4f8;
@@ -29,7 +29,31 @@
     --purple-bg: rgba(124,58,237,0.08);
     --radius: 10px;
     --font: 'Noto Sans KR', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
+    --mono: 'DM Mono', monospace;
+  }
+  .mission-banner {
+    background: linear-gradient(90deg, #1e3a5f 0%, #2563eb 100%);
+    color: rgba(255,255,255,0.95);
+    font-size: 12px;
+    font-family: var(--font);
+    padding: 9px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.1px;
+  }
+  .mission-label {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-transform: uppercase;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:var(--font); font-size:14px; min-height:100vh; }
@@ -426,6 +450,10 @@
 </head>
 <body>
 
+<div class="mission-banner">
+  <span class="mission-label">Mission</span>
+  미래의 우량 고객(KA)을 가장 낮은 비용(C)으로 선점하고, 신규 인력의 성장에 걸리는 시간(T)을 절반으로 줄여 담당의 영업 기회(Q)를 확보하기 위한 인큐베이팅 TF
+</div>
 <div class="header">
   <div class="logo">
     <span class="logo-badge">TF</span>
@@ -477,7 +505,7 @@
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">발굴고객 수</div>
+            <div class="type-kpi-label">컨택고객 수</div>
             <div><span class="kpi-value" id="kpi-a-visited">0</span><span class="kpi-unit">개사</span></div>
           </div>
           <div class="type-kpi-divider"></div>
@@ -530,7 +558,7 @@
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
-            <div class="type-kpi-label">발굴고객 수</div>
+            <div class="type-kpi-label">컨택고객 수</div>
             <div><span class="kpi-value" id="kpi-b-visited">0</span><span class="kpi-unit">개사</span></div>
           </div>
           <div class="type-kpi-divider"></div>
@@ -567,22 +595,16 @@
       </div>
     </div>
 
-    <div class="dash-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+    <div class="dash-grid" style="grid-template-columns:1fr 1fr;">
+      <!-- PainPoint 현황 -->
       <div class="dash-card">
-        <div class="dash-card-title">영업사원별 <span>발굴고객 수</span></div>
-        <div class="bar-list" id="rep-bars-visited"></div>
+        <div class="dash-card-title">고객 PainPoint 분포 <span>전체 활동 기준</span></div>
+        <div id="pain-dist"><div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">데이터 없음</div></div>
       </div>
+      <!-- PainPoint × 활동유형 -->
       <div class="dash-card">
-        <div class="dash-card-title">영업사원별 <span>컨택 건수</span></div>
-        <div class="bar-list" id="rep-bars-contact"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-title">영업사원별 <span>미팅 건수</span></div>
-        <div class="bar-list" id="rep-bars-meeting"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-title">영업사원별 <span>제안 건수</span></div>
-        <div class="bar-list" id="rep-bars-proposal"></div>
+        <div class="dash-card-title">PainPoint별 영업 단계 현황 <span>컨택→미팅→제안</span></div>
+        <div id="pain-funnel"><div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">데이터 없음</div></div>
       </div>
       <!-- 최근 영업활동 -->
       <div class="dash-card" style="grid-column:1/-1;">
@@ -614,6 +636,7 @@
             <option value="">-- 선택 --</option>
             <option>추승훈</option>
             <option>강소연</option>
+            <option>정예진</option>
             <option>김나정</option>
             <option>안수진</option>
             <option>이정민</option>
@@ -853,7 +876,7 @@ function refreshDash() {
     const total    = cust.length;
     const visited  = new Set(acts.map(a => a.customer)).size;  // 중복 제거
     const remain   = Math.max(0, total - visited);
-    const rate     = total ? Math.round(visited / total * 100) : 0;
+    const rate     = total ? (visited / total * 100).toFixed(1) : "0.0";
     const contact  = acts.filter(a => CONTACT_TYPES.includes(a.type)).length;
     const meeting  = acts.filter(a => MEETING_TYPES.includes(a.type)).length;
     const proposal = acts.filter(a => PROPOSAL_TYPES.includes(a.type)).length;
@@ -868,33 +891,77 @@ function refreshDash() {
   calcKpi(custA, actA, 'a');
   calcKpi(custB, actB, 'b');
 
-  // ── 영업사원별 4종 바 차트 ──
-  const reps      = ['추승훈','강소연','김나정','안수진','이정민','김윤환'];
-  const repColors = ['#2563eb','#16a34a','#d97706','#7c3aed','#dc2626','#0891b2'];
+  // ── PainPoint 분포 차트 ──
+  const PAIN_ITEMS = ['비용부담','서비스 복잡성&관리 어려움','장애/다운타임 리스크','보안 불안','확장성 부족','내부 IT 인력 부족'];
+  const PAIN_COLORS = ['#dc2626','#d97706','#ea580c','#7c3aed','#2563eb','#16a34a'];
+  const PAIN_SHORT  = ['비용부담','서비스복잡성','장애리스크','보안불안','확장성부족','IT인력부족'];
   const EMPTY_MSG = '<div style="color:var(--text3);font-size:12px;padding:16px 0;text-align:center;">데이터 없음</div>';
 
-  function renderRepBars(elId, countFn) {
-    const el = document.getElementById(elId);
-    if(!el) return;
-    const counts = reps.map(countFn);
-    const max = Math.max(...counts, 1);
-    if(counts.every(c=>c===0)) { el.innerHTML = EMPTY_MSG; return; }
-    el.innerHTML = reps.map((r,i) => `
-      <div class="bar-item">
+  // 전체 pain 카운트 (중복 선택 포함)
+  const painCount = {};
+  PAIN_ITEMS.forEach(p => painCount[p] = 0);
+  activities.forEach(a => {
+    if(a.pain) a.pain.split(',').filter(Boolean).forEach(p => { if(painCount[p]!==undefined) painCount[p]++; });
+  });
+  const painTotal = Object.values(painCount).reduce((s,v)=>s+v,0);
+  const painDistEl = document.getElementById('pain-dist');
+  if(!painTotal) {
+    painDistEl.innerHTML = EMPTY_MSG;
+  } else {
+    const max = Math.max(...Object.values(painCount), 1);
+    painDistEl.innerHTML = '<div class="bar-list">' + PAIN_ITEMS.map((p,i) => {
+      const cnt = painCount[p];
+      const pct = painTotal ? Math.round(cnt/painTotal*100) : 0;
+      return `<div class="bar-item">
         <div class="bar-header">
-          <span class="bar-name">${r}</span>
-          <span class="bar-val">${counts[i]}건</span>
+          <span class="bar-name" style="font-size:11px;">${p}</span>
+          <span class="bar-val">${cnt}건 <span style="color:var(--text3);font-size:10px;">(${pct}%)</span></span>
         </div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${counts[i]/max*100}%;background:${repColors[i]};"></div>
-        </div>
-      </div>`).join('');
+        <div class="bar-track"><div class="bar-fill" style="width:${cnt/max*100}%;background:${PAIN_COLORS[i]};"></div></div>
+      </div>`;
+    }).join('') + '</div>';
   }
 
-  renderRepBars('rep-bars-visited',  r => new Set(activities.filter(a=>a.rep===r).map(a=>a.customer)).size);
-  renderRepBars('rep-bars-contact',  r => activities.filter(a=>a.rep===r && CONTACT_TYPES.includes(a.type)).length);
-  renderRepBars('rep-bars-meeting',  r => activities.filter(a=>a.rep===r && MEETING_TYPES.includes(a.type)).length);
-  renderRepBars('rep-bars-proposal', r => activities.filter(a=>a.rep===r && PROPOSAL_TYPES.includes(a.type)).length);
+  // PainPoint × 활동유형 퍼널
+  const painFunnelEl = document.getElementById('pain-funnel');
+  if(!painTotal) {
+    painFunnelEl.innerHTML = EMPTY_MSG;
+  } else {
+    painFunnelEl.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:5px 8px;color:var(--text3);font-weight:600;border-bottom:1px solid var(--border);">PainPoint</th>
+            <th style="text-align:center;padding:5px 8px;color:var(--accent);font-weight:600;border-bottom:1px solid var(--border);">컨택</th>
+            <th style="text-align:center;padding:5px 8px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">미팅</th>
+            <th style="text-align:center;padding:5px 8px;color:var(--purple);font-weight:600;border-bottom:1px solid var(--border);">제안</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${PAIN_ITEMS.map((p,i) => {
+            const actsWithPain = activities.filter(a => a.pain && a.pain.split(',').includes(p));
+            const c = actsWithPain.filter(a=>CONTACT_TYPES.includes(a.type)).length;
+            const m = actsWithPain.filter(a=>MEETING_TYPES.includes(a.type)).length;
+            const pr = actsWithPain.filter(a=>PROPOSAL_TYPES.includes(a.type)).length;
+            const rowBg = i%2===0?'var(--surface2)':'var(--surface)';
+            return `<tr style="background:${rowBg};">
+              <td style="padding:7px 8px;font-weight:500;color:var(--text);">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${PAIN_COLORS[i]};margin-right:6px;"></span>${PAIN_SHORT[i]}
+              </td>
+              <td style="text-align:center;padding:7px 8px;">
+                ${c?`<span class="badge badge-blue">${c}</span>`:'<span style="color:var(--text3)">–</span>'}
+              </td>
+              <td style="text-align:center;padding:7px 8px;">
+                ${m?`<span class="badge badge-green">${m}</span>`:'<span style="color:var(--text3)">–</span>'}
+              </td>
+              <td style="text-align:center;padding:7px 8px;">
+                ${pr?`<span class="badge badge-purple">${pr}</span>`:'<span style="color:var(--text3)">–</span>'}
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  }
 
   // ── 최근 영업활동 ──
   const recentEl = document.getElementById('recent-activity');
