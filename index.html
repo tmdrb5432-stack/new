@@ -650,16 +650,11 @@
       </div>
     </div>
 
-    <div class="dash-grid" style="grid-template-columns:1fr 1fr;">
+    <div class="dash-grid" style="grid-template-columns:1fr;">
       <!-- PainPoint 현황 -->
       <div class="dash-card">
         <div class="dash-card-title">고객 PainPoint 분포 <span>전체 활동 기준</span></div>
         <div id="pain-dist"><div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">데이터 없음</div></div>
-      </div>
-      <!-- PainPoint × 활동유형 -->
-      <div class="dash-card">
-        <div class="dash-card-title">PainPoint별 영업 단계 현황 <span>컨택→미팅→제안</span></div>
-        <div id="pain-funnel"><div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center;">데이터 없음</div></div>
       </div>
       <!-- 최근 영업활동 -->
       <div class="dash-card" style="grid-column:1/-1;">
@@ -1018,48 +1013,6 @@ function refreshDash() {
       </div>`;
     }).join('') + '</div>';
   }
-
-  // PainPoint × 활동유형 퍼널
-  const painFunnelEl = document.getElementById('pain-funnel');
-  if(!painTotal) {
-    painFunnelEl.innerHTML = EMPTY_MSG;
-  } else {
-    painFunnelEl.innerHTML = `
-      <table style="width:100%;border-collapse:collapse;font-size:11px;">
-        <thead>
-          <tr>
-            <th style="text-align:left;padding:5px 8px;color:var(--text3);font-weight:600;border-bottom:1px solid var(--border);">PainPoint</th>
-            <th style="text-align:center;padding:5px 8px;color:var(--accent);font-weight:600;border-bottom:1px solid var(--border);">컨택</th>
-            <th style="text-align:center;padding:5px 8px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">미팅</th>
-            <th style="text-align:center;padding:5px 8px;color:var(--purple);font-weight:600;border-bottom:1px solid var(--border);">제안</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${PAIN_ITEMS.map((p,i) => {
-            const actsWithPain = activities.filter(a => a.pain && a.pain.split(',').includes(p));
-            const c = actsWithPain.filter(a=>CONTACT_TYPES.includes(a.type)).length;
-            const m = actsWithPain.filter(a=>MEETING_TYPES.includes(a.type)).length;
-            const pr = actsWithPain.filter(a=>PROPOSAL_TYPES.includes(a.type)).length;
-            const rowBg = i%2===0?'var(--surface2)':'var(--surface)';
-            return `<tr style="background:${rowBg};">
-              <td style="padding:7px 8px;font-weight:500;color:var(--text);">
-                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${PAIN_COLORS[i]};margin-right:6px;"></span>${PAIN_SHORT[i]}
-              </td>
-              <td style="text-align:center;padding:7px 8px;">
-                ${c?`<span class="badge badge-blue">${c}</span>`:'<span style="color:var(--text3)">–</span>'}
-              </td>
-              <td style="text-align:center;padding:7px 8px;">
-                ${m?`<span class="badge badge-green">${m}</span>`:'<span style="color:var(--text3)">–</span>'}
-              </td>
-              <td style="text-align:center;padding:7px 8px;">
-                ${pr?`<span class="badge badge-purple">${pr}</span>`:'<span style="color:var(--text3)">–</span>'}
-              </td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>`;
-  }
-
   // ── 최근 영업활동 ──
   const recentEl = document.getElementById('recent-activity');
   const recent = [...activities].sort((a,b)=>b.id-a.id).slice(0,10);
