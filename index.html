@@ -223,6 +223,61 @@
     background:var(--surface2);
     border-radius:7px;
     font-size:12px;
+    cursor:pointer;
+    transition:background 0.15s, box-shadow 0.15s;
+  }
+  .activity-item:hover { background:var(--surface3); box-shadow:0 2px 8px rgba(37,99,235,0.08); }
+
+  /* ── 상세 팝업 모달 ── */
+  .modal-overlay {
+    position:fixed; inset:0;
+    background:rgba(15,23,42,0.45);
+    backdrop-filter:blur(3px);
+    z-index:500;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none;
+    transition:opacity 0.2s;
+  }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+  .modal {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    width:480px; max-width:92vw;
+    box-shadow:0 20px 60px rgba(15,23,42,0.18);
+    transform:translateY(16px) scale(0.98);
+    transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);
+    overflow:hidden;
+  }
+  .modal-overlay.open .modal { transform:translateY(0) scale(1); }
+  .modal-header {
+    padding:18px 22px 14px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  }
+  .modal-title { font-size:15px; font-weight:700; color:var(--text); }
+  .modal-sub { font-size:11px; color:var(--text3); margin-top:3px; }
+  .modal-close {
+    width:28px; height:28px; border-radius:7px;
+    border:1px solid var(--border); background:var(--surface2);
+    color:var(--text2); font-size:14px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; transition:background 0.15s;
+  }
+  .modal-close:hover { background:var(--surface3); }
+  .modal-body { padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
+  .modal-row { display:flex; gap:8px; align-items:flex-start; }
+  .modal-label {
+    font-size:10px; font-weight:700; color:var(--text3);
+    text-transform:uppercase; letter-spacing:0.6px;
+    min-width:80px; padding-top:2px;
+  }
+  .modal-val { font-size:13px; color:var(--text); flex:1; line-height:1.6; }
+  .modal-pain-tags { display:flex; flex-wrap:wrap; gap:5px; }
+  .modal-footer {
+    padding:14px 22px;
+    border-top:1px solid var(--border);
+    display:flex; justify-content:flex-end;
   }
   .activity-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
   .activity-info { flex:1; }
@@ -756,6 +811,48 @@
 
 </div>
 
+<!-- 상세 팝업 모달 -->
+<div class="modal-overlay" id="actModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-customer">–</div>
+        <div class="modal-sub" id="modal-type-badge"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal(null)">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <span class="modal-label">활동일</span>
+        <span class="modal-val" id="modal-date">–</span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">영업사원</span>
+        <span class="modal-val" id="modal-rep">–</span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">활동유형</span>
+        <span class="modal-val" id="modal-type">–</span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">고객 타입</span>
+        <span class="modal-val" id="modal-ctype">–</span>
+      </div>
+      <div class="modal-row" id="modal-pain-row">
+        <span class="modal-label">PainPoint</span>
+        <div class="modal-val modal-pain-tags" id="modal-pain">–</div>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">활동 내용</span>
+        <span class="modal-val" id="modal-memo" style="white-space:pre-wrap;">–</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal(null)">닫기</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast">
   <span class="toast-icon" id="toast-icon">✓</span>
@@ -971,7 +1068,7 @@ function refreshDash() {
   } else {
     const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
     recentEl.innerHTML = '<div class="activity-list">' + recent.map(a => `
-      <div class="activity-item">
+      <div class="activity-item" onclick="openModal(${a.id})">
         <div class="activity-dot" style="background:${PROPOSAL_TYPES.includes(a.type)?'var(--purple)':MEETING_TYPES.includes(a.type)?'var(--green)':'var(--accent)'}"></div>
         <div class="activity-info">
           <div class="activity-name">${a.customer} <span class="badge ${typeColor(a.type)}" style="margin-left:6px;font-size:10px;">${a.type||''}</span></div>
@@ -1278,6 +1375,41 @@ function exportCSV() {
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download='고객현황.csv'; a.click();
 }
+
+// ──────────────── MODAL ────────────────
+function openModal(id) {
+  const a = activities.find(x => x.id === id);
+  if(!a) return;
+  const typeColor = t => CONTACT_TYPES.includes(t)?'badge-blue':MEETING_TYPES.includes(t)?'badge-green':PROPOSAL_TYPES.includes(t)?'badge-purple':'badge-yellow';
+  document.getElementById('modal-customer').textContent  = a.customer || '–';
+  document.getElementById('modal-type-badge').innerHTML  = a.type ? `<span class="badge ${typeColor(a.type)}">${a.type}</span>` : '';
+  document.getElementById('modal-date').textContent      = a.date || '–';
+  document.getElementById('modal-rep').textContent       = a.rep || '–';
+  document.getElementById('modal-type').textContent      = a.type || '–';
+  document.getElementById('modal-ctype').innerHTML       = a.customerType === 'B'
+    ? '<span class="badge badge-purple">B타입 · Shift 참여 스타트업</span>'
+    : '<span class="badge badge-blue">A타입 · 미발굴 타겟</span>';
+  const painEl = document.getElementById('modal-pain');
+  if(a.pain && a.pain.trim()) {
+    painEl.innerHTML = a.pain.split(',').filter(Boolean)
+      .map(p => `<span class="badge badge-yellow">${p}</span>`).join('');
+    document.getElementById('modal-pain-row').style.display = 'flex';
+  } else {
+    painEl.textContent = '–';
+    document.getElementById('modal-pain-row').style.display = 'flex';
+  }
+  document.getElementById('modal-memo').textContent = a.memo || '활동 내용 없음';
+  document.getElementById('actModal').classList.add('open');
+}
+
+function closeModal(e) {
+  if(e && e.target !== document.getElementById('actModal')) return;
+  document.getElementById('actModal').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') document.getElementById('actModal').classList.remove('open');
+});
 
 // ──────────────── TOAST ────────────────
 function showToast(icon, msg) {
