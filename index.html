@@ -1033,24 +1033,37 @@ async function loadFromBin() {
   try {
     showSyncStatus('loading');
     const res = await fetch(BIN_URL + '/latest', {
-      headers: { 'X-Master-Key': API_KEY }
+      method: 'GET',
+      headers: {
+        'X-Master-Key': API_KEY,
+        'X-Bin-Meta': 'false'
+      }
     });
+    if(!res.ok) {
+      const errText = await res.text();
+      console.error('JSONBin GET 오류:', res.status, errText);
+      showSyncStatus('error');
+      showToast('⚠️', '불러오기 실패 (' + res.status + '): ' + errText.slice(0,80));
+      return;
+    }
     const json = await res.json();
-    activities = json.record.activities || [];
+    // X-Bin-Meta:false 이면 record 없이 바로 데이터
+    activities = (json.record ? json.record.activities : json.activities) || [];
     renderActivityTable();
     refreshDash();
     renderCustomerTable(customers);
     showSyncStatus('ok');
   } catch(e) {
+    console.error('loadFromBin 예외:', e);
     showSyncStatus('error');
-    showToast('⚠️', '데이터 불러오기 실패. 네트워크를 확인해주세요');
+    showToast('⚠️', '불러오기 실패: ' + e.message);
   }
 }
 
 async function saveToBin() {
   try {
     showSyncStatus('saving');
-    await fetch(BIN_URL, {
+    const res = await fetch(BIN_URL, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -1058,10 +1071,18 @@ async function saveToBin() {
       },
       body: JSON.stringify({ activities })
     });
+    if(!res.ok) {
+      const errText = await res.text();
+      console.error('JSONBin PUT 오류:', res.status, errText);
+      showSyncStatus('error');
+      showToast('⚠️', '저장 실패 (' + res.status + '): ' + errText.slice(0,80));
+      return;
+    }
     showSyncStatus('ok');
   } catch(e) {
+    console.error('saveToBin 예외:', e);
     showSyncStatus('error');
-    showToast('⚠️', '저장 실패. 네트워크를 확인해주세요');
+    showToast('⚠️', '저장 실패: ' + e.message);
   }
 }
 
