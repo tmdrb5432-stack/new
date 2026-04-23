@@ -564,63 +564,7 @@
       </div>
       <button class="btn btn-outline btn-sm" onclick="refreshDash()">↻ 새로고침</button>
     </div>
-<!-- ── 전체 합계 섹션 ── -->
-<div style="
-  background:#ffffff;
-  border:1px solid #e2e8f0;
-  border-radius:10px;
-  padding:18px 24px;
-  margin-bottom:12px;
-  display:flex;
-  align-items:center;
-  gap:0;
-  position:relative;
-  overflow:hidden;
-">
-  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#7c3aed);"></div>
-  <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 발굴대상</div>
-    <div><span id="kpi-all-total" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">개사</span></div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:4px;">A+B 전체</div>
-  </div>
-  <div style="width:1px;height:40px;background:#e2e8f0;"></div>
-  <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 컨택고객 수</div>
-    <div><span id="kpi-all-visited" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">개사</span></div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:4px;font-family:'DM Mono',monospace;" id="kpi-all-visited-rate">–</div>
-  </div>
-  <div style="width:1px;height:40px;background:#e2e8f0;"></div>
-  <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 잔여 고객 수</div>
-    <div><span id="kpi-all-remain" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">개사</span></div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:4px;">미컨택 고객</div>
-  </div>
-  <div style="width:1px;height:40px;background:#e2e8f0;"></div>
-  <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 진척률</div>
-    <div><span id="kpi-all-rate" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0.0</span><span style="font-size:13px;color:#475569;margin-left:2px;">%</span></div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:4px;">A+B 합산</div>
-  </div>
-  <div style="width:1px;height:40px;background:#e2e8f0;"></div>
-  <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 컨택 건수</div>
-    <div><span id="kpi-all-contact" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:4px;">이메일·전화</div>
-  </div>
-  <div style="width:1px;height:40px;background:#e2e8f0;"></div>
-  <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 미팅 건수</div>
-    <div><span id="kpi-all-meeting" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:4px;">대면·화상</div>
-  </div>
-  <div style="width:1px;height:40px;background:#e2e8f0;"></div>
-  <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 제안 건수</div>
-    <div><span id="kpi-all-proposal" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:4px;">제안서·계약</div>
-  </div>
-</div>
-    
+
     <!-- ── 전체고객 섹션: A타입 / B타입 ── -->
     <div class="type-section">
       <!-- A타입 -->
@@ -657,9 +601,9 @@
         <!-- 2줄: 컨택건수 / 미팅건수 / 제안건수 -->
         <div class="type-kpi-row" style="border-top:1px solid var(--border);padding-top:10px;">
           <div class="type-kpi">
-            <div class="type-kpi-label">컨택 건수</div>
+            <div class="type-kpi-label">회신 건수</div>
             <div><span class="kpi-value" id="kpi-a-contact">0</span><span class="kpi-unit">건</span></div>
-            <div class="kpi-sub" style="font-size:10px;">이메일·전화</div>
+            <div class="kpi-sub" style="font-size:10px;">이메일·전화 회신</div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
@@ -710,9 +654,9 @@
         <!-- 2줄 -->
         <div class="type-kpi-row" style="border-top:1px solid var(--border);padding-top:10px;">
           <div class="type-kpi">
-            <div class="type-kpi-label">컨택 건수</div>
+            <div class="type-kpi-label">회신 건수</div>
             <div><span class="kpi-value" id="kpi-b-contact">0</span><span class="kpi-unit">건</span></div>
-            <div class="kpi-sub" style="font-size:10px;">이메일·전화</div>
+            <div class="kpi-sub" style="font-size:10px;">이메일·전화 회신</div>
           </div>
           <div class="type-kpi-divider"></div>
           <div class="type-kpi">
@@ -725,6 +669,78 @@
             <div class="type-kpi-label">제안 건수</div>
             <div><span class="kpi-value" id="kpi-b-proposal">0</span><span class="kpi-unit">건</span></div>
             <div class="kpi-sub" style="font-size:10px;">제안서·계약</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 이메일 발송 결과 ── -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+
+      <!-- 1차 이메일 발송 결과 -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#60a5fa);"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:14px;">
+          📧 1차 이메일 발송 결과
+        </div>
+        <div style="display:flex;align-items:center;gap:0;">
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">전체 발송</div>
+            <div><span id="email1-total" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--text);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">정상수신</div>
+            <div><span id="email1-received" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--green);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">회신</div>
+            <div><span id="email1-reply" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--accent);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">반송</div>
+            <div><span id="email1-bounce" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--red);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">회신률</div>
+            <div><span id="email1-rate" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--purple);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2차 이메일 발송 결과 -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:14px;">
+          📧 2차 이메일 발송 결과
+        </div>
+        <div style="display:flex;align-items:center;gap:0;">
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">전체 발송</div>
+            <div><span id="email2-total" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--text);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">정상수신</div>
+            <div><span id="email2-received" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--green);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">회신</div>
+            <div><span id="email2-reply" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--accent);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">반송</div>
+            <div><span id="email2-bounce" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--red);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">건</span></div>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">회신률</div>
+            <div><span id="email2-rate" style="font-family:var(--mono);font-size:24px;font-weight:500;color:var(--purple);">–</span><span style="font-size:12px;color:var(--text2);margin-left:2px;">%</span></div>
           </div>
         </div>
       </div>
@@ -794,6 +810,15 @@
             <input type="hidden" id="f-customer-val">
             <div class="search-dropdown" id="customer-dropdown"></div>
           </div>
+        </div>
+
+        <div class="form-group" id="extra-customer-group">
+          <label class="form-label">추가 고객사 입력
+            <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">목록에 없는 고객사 직접 입력 · A타입으로 자동 분류</span>
+          </label>
+          <input type="text" class="form-control" id="f-extra-customer"
+            placeholder="예: (주)신규기업명"
+            oninput="handleExtraCustomer(this.value)">
         </div>
 
         <div class="form-group">
@@ -1103,26 +1128,7 @@ function refreshDash() {
     document.getElementById(`kpi-${prefix}-meeting`).textContent  = meeting.toLocaleString();
     document.getElementById(`kpi-${prefix}-proposal`).textContent = proposal.toLocaleString();
   }
-  // 전체 합계 KPI
-function calcAllKpi() {
-  const total    = customers.length;
-  const visited  = new Set(activities.map(a => a.customer)).size;
-  const remain   = Math.max(0, total - visited);
-  const rate     = total ? (visited / total * 100).toFixed(1) : '0.0';
-  const contact  = activities.filter(a => CONTACT_TYPES.includes(a.type)).length;
-  const meeting  = activities.filter(a => MEETING_TYPES.includes(a.type)).length;
-  const proposal = activities.filter(a => PROPOSAL_TYPES.includes(a.type)).length;
-  document.getElementById('kpi-all-total').textContent        = total.toLocaleString();
-  document.getElementById('kpi-all-visited').textContent      = visited.toLocaleString();
-  document.getElementById('kpi-all-visited-rate').textContent = `진척률 ${rate}%`;
-  document.getElementById('kpi-all-remain').textContent       = remain.toLocaleString();
-  document.getElementById('kpi-all-rate').textContent         = rate;
-  document.getElementById('kpi-all-contact').textContent      = contact.toLocaleString();
-  document.getElementById('kpi-all-meeting').textContent      = meeting.toLocaleString();
-  document.getElementById('kpi-all-proposal').textContent     = proposal.toLocaleString();
-}
   calcKpi(custA, actA, 'a');
-  calcAllKpi();
   calcKpi(custB, actB, 'b');
 
   // ── PainPoint 분포 차트 ──
@@ -1154,6 +1160,47 @@ function calcAllKpi() {
         <div class="bar-track"><div class="bar-fill" style="width:${cnt/max*100}%;background:${PAIN_COLORS[i]};"></div></div>
       </div>`;
     }).join('') + '</div>';
+  }
+
+  // PainPoint × 활동유형 퍼널
+  const painFunnelEl = document.getElementById('pain-funnel');
+  if(!painTotal) {
+    painFunnelEl.innerHTML = EMPTY_MSG;
+  } else {
+    painFunnelEl.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:5px 8px;color:var(--text3);font-weight:600;border-bottom:1px solid var(--border);">PainPoint</th>
+            <th style="text-align:center;padding:5px 8px;color:var(--accent);font-weight:600;border-bottom:1px solid var(--border);">컨택</th>
+            <th style="text-align:center;padding:5px 8px;color:var(--green);font-weight:600;border-bottom:1px solid var(--border);">미팅</th>
+            <th style="text-align:center;padding:5px 8px;color:var(--purple);font-weight:600;border-bottom:1px solid var(--border);">제안</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${PAIN_ITEMS.map((p,i) => {
+            const actsWithPain = activities.filter(a => a.pain && a.pain.split(',').includes(p));
+            const c = actsWithPain.filter(a=>CONTACT_TYPES.includes(a.type)).length;
+            const m = actsWithPain.filter(a=>MEETING_TYPES.includes(a.type)).length;
+            const pr = actsWithPain.filter(a=>PROPOSAL_TYPES.includes(a.type)).length;
+            const rowBg = i%2===0?'var(--surface2)':'var(--surface)';
+            return `<tr style="background:${rowBg};">
+              <td style="padding:7px 8px;font-weight:500;color:var(--text);">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${PAIN_COLORS[i]};margin-right:6px;"></span>${PAIN_SHORT[i]}
+              </td>
+              <td style="text-align:center;padding:7px 8px;">
+                ${c?`<span class="badge badge-blue">${c}</span>`:'<span style="color:var(--text3)">–</span>'}
+              </td>
+              <td style="text-align:center;padding:7px 8px;">
+                ${m?`<span class="badge badge-green">${m}</span>`:'<span style="color:var(--text3)">–</span>'}
+              </td>
+              <td style="text-align:center;padding:7px 8px;">
+                ${pr?`<span class="badge badge-purple">${pr}</span>`:'<span style="color:var(--text3)">–</span>'}
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
   }
 
   // ── 최근 영업활동 ──
@@ -1195,6 +1242,22 @@ function getCustomerName(c) {
   return c['고객명'] || c['고객사명'] || c[Object.keys(c)[1]] || c[Object.keys(c)[0]] || '';
 }
 
+// 추가 고객사 입력 시 처리
+function handleExtraCustomer(val) {
+  const customerInput = document.getElementById('f-customer-input');
+  const customerVal   = document.getElementById('f-customer-val');
+  if(val.trim()) {
+    // 추가 고객사 입력 시 기존 고객사 검색 비활성화
+    customerInput.value = '';
+    customerVal.value   = '';
+    customerInput.disabled = true;
+    customerInput.placeholder = '추가 고객사 입력 중...';
+  } else {
+    customerInput.disabled = false;
+    customerInput.placeholder = '고객사명 검색...';
+  }
+}
+
 function filterCustomers(val) {
   const dd = document.getElementById('customer-dropdown');
   if(!val.trim()) { dd.classList.remove('open'); return; }
@@ -1228,12 +1291,24 @@ async function submitActivity() {
   if(!type)     { showToast('⚠️','활동 유형을 선택해주세요'); return; }
   if(!date)     { showToast('⚠️','활동일을 입력해주세요'); return; }
 
-  const found = customers.find(c => (c['고객명']||c[Object.keys(c)[0]]||'') === customer);
+  // 추가 고객사 처리: 목록에 없는 고객사를 입력한 경우 customers에 A타입으로 추가
+  const extraCustomer = document.getElementById('f-extra-customer').value.trim();
+  const finalCustomer = extraCustomer || customer;
+  if(!finalCustomer) { showToast('⚠️','고객사를 입력해주세요'); return; }
+
+  if(extraCustomer) {
+    const alreadyExists = customers.some(c => getCustomerName(c) === extraCustomer);
+    if(!alreadyExists) {
+      customers.push({고객명: extraCustomer, 사업자번호: '', 타입: 'A', 비고: '추가입력'});
+    }
+  }
+
+  const found = customers.find(c => getCustomerName(c) === finalCustomer);
   const customerType = found ? ((found['타입']||'A').toString().trim().toUpperCase()==='B'?'B':'A') : 'A';
 
   const act = {
     id: Date.now(),
-    date, rep, customer, type, customerType,
+    date, rep, customer: finalCustomer, type, customerType,
     pain: document.getElementById('f-pain').value,
     memo: document.getElementById('f-memo').value
   };
@@ -1247,8 +1322,10 @@ async function submitActivity() {
 }
 
 function resetForm() {
-  ['f-rep','f-type','f-memo','f-pain'].forEach(id => document.getElementById(id).value='');
+  ['f-rep','f-type','f-memo','f-pain','f-extra-customer'].forEach(id => document.getElementById(id).value='');
   document.getElementById('f-customer-input').value='';
+  document.getElementById('f-customer-input').disabled = false;
+  document.getElementById('f-customer-input').placeholder = '고객사명 검색...';
   document.getElementById('f-customer-val').value='';
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.querySelectorAll('.reaction-chip').forEach(c=>c.className='reaction-chip');
