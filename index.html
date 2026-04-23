@@ -565,6 +565,52 @@
       <button class="btn btn-outline btn-sm" onclick="refreshDash()">↻ 새로고침</button>
     </div>
 
+    <!-- ── 전체 합계 섹션 ── -->
+    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 24px;margin-bottom:12px;display:flex;align-items:center;gap:0;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#7c3aed);"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 발굴대상</div>
+        <div><span id="kpi-all-total" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">개사</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">A+B 전체</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 컨택고객 수</div>
+        <div><span id="kpi-all-visited" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">개사</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;font-family:'DM Mono',monospace;" id="kpi-all-visited-rate">–</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 잔여 고객 수</div>
+        <div><span id="kpi-all-remain" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">개사</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">미컨택 고객</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 진척률</div>
+        <div><span id="kpi-all-rate" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0.0</span><span style="font-size:13px;color:#475569;margin-left:2px;">%</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">A+B 합산</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 회신 건수</div>
+        <div><span id="kpi-all-contact" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">이메일·전화 회신</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 미팅 건수</div>
+        <div><span id="kpi-all-meeting" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">대면·화상</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 제안 건수</div>
+        <div><span id="kpi-all-proposal" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">제안서·계약</div>
+      </div>
+    </div>
+
     <!-- ── 전체고객 섹션: A타입 / B타입 ── -->
     <div class="type-section">
       <!-- A타입 -->
@@ -1033,37 +1079,24 @@ async function loadFromBin() {
   try {
     showSyncStatus('loading');
     const res = await fetch(BIN_URL + '/latest', {
-      method: 'GET',
-      headers: {
-        'X-Master-Key': API_KEY,
-        'X-Bin-Meta': 'false'
-      }
+      headers: { 'X-Master-Key': API_KEY }
     });
-    if(!res.ok) {
-      const errText = await res.text();
-      console.error('JSONBin GET 오류:', res.status, errText);
-      showSyncStatus('error');
-      showToast('⚠️', '불러오기 실패 (' + res.status + '): ' + errText.slice(0,80));
-      return;
-    }
     const json = await res.json();
-    // X-Bin-Meta:false 이면 record 없이 바로 데이터
-    activities = (json.record ? json.record.activities : json.activities) || [];
+    activities = json.record.activities || [];
     renderActivityTable();
     refreshDash();
     renderCustomerTable(customers);
     showSyncStatus('ok');
   } catch(e) {
-    console.error('loadFromBin 예외:', e);
     showSyncStatus('error');
-    showToast('⚠️', '불러오기 실패: ' + e.message);
+    showToast('⚠️', '데이터 불러오기 실패. 네트워크를 확인해주세요');
   }
 }
 
 async function saveToBin() {
   try {
     showSyncStatus('saving');
-    const res = await fetch(BIN_URL, {
+    await fetch(BIN_URL, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -1071,18 +1104,10 @@ async function saveToBin() {
       },
       body: JSON.stringify({ activities })
     });
-    if(!res.ok) {
-      const errText = await res.text();
-      console.error('JSONBin PUT 오류:', res.status, errText);
-      showSyncStatus('error');
-      showToast('⚠️', '저장 실패 (' + res.status + '): ' + errText.slice(0,80));
-      return;
-    }
     showSyncStatus('ok');
   } catch(e) {
-    console.error('saveToBin 예외:', e);
     showSyncStatus('error');
-    showToast('⚠️', '저장 실패: ' + e.message);
+    showToast('⚠️', '저장 실패. 네트워크를 확인해주세요');
   }
 }
 
@@ -1151,6 +1176,25 @@ function refreshDash() {
   }
   calcKpi(custA, actA, 'a');
   calcKpi(custB, actB, 'b');
+
+  // 전체 합계
+  (function calcAllKpi() {
+    const total    = customers.length;
+    const visited  = new Set(activities.map(a => a.customer)).size;
+    const remain   = Math.max(0, total - visited);
+    const rate     = total ? (visited / total * 100).toFixed(1) : '0.0';
+    const contact  = activities.filter(a => CONTACT_TYPES.includes(a.type)).length;
+    const meeting  = activities.filter(a => MEETING_TYPES.includes(a.type)).length;
+    const proposal = activities.filter(a => PROPOSAL_TYPES.includes(a.type)).length;
+    document.getElementById('kpi-all-total').textContent        = total.toLocaleString();
+    document.getElementById('kpi-all-visited').textContent      = visited.toLocaleString();
+    document.getElementById('kpi-all-visited-rate').textContent = '진척률 ' + rate + '%';
+    document.getElementById('kpi-all-remain').textContent       = remain.toLocaleString();
+    document.getElementById('kpi-all-rate').textContent         = rate;
+    document.getElementById('kpi-all-contact').textContent      = contact.toLocaleString();
+    document.getElementById('kpi-all-meeting').textContent      = meeting.toLocaleString();
+    document.getElementById('kpi-all-proposal').textContent     = proposal.toLocaleString();
+  })();
 
   // ── PainPoint 분포 차트 ──
   const PAIN_ITEMS = ['비용부담','서비스 복잡성&관리 어려움','장애/다운타임 리스크','보안 불안','확장성 부족','내부 IT 인력 부족'];
