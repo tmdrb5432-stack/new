@@ -1310,6 +1310,14 @@ function addExtraCustomer() {
 document.getElementById('f-extra-customer').addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); addExtraCustomer(); }
 });
+  function deleteExtraCustomer(name) {
+  if (!confirm(`'${name}'을 고객현황에서 삭제하시겠습니까?`)) return;
+  customers = customers.filter(c => c.고객명 !== name);
+  activities = activities.filter(a => a.customer !== name);
+  renderActivityTable(); refreshDash(); renderCustomerTable(customers);
+  showToast('🗑️', `'${name}' 삭제되었습니다`);
+  saveToBin();
+}
 function resetForm() {
   ['f-rep','f-type','f-memo','f-pain'].forEach(id => document.getElementById(id).value='');
   document.getElementById('f-customer-input').value='';
@@ -1506,20 +1514,24 @@ function renderCustomerTable(data) {
       <th style="width:70px">타입</th>
       <th style="width:110px">방문 현황</th>
       <th style="width:80px">방문 횟수</th>
+      <th style="width:60px"></th>
     </tr></thead>
     <tbody>${data.map((row,i) => {
       const actCount = activities.filter(a=>a.customer===row.고객명).length;
       const typeBadge = row.타입==='B'
         ? '<span class="badge badge-purple">B</span>'
         : '<span class="badge badge-blue">A</span>';
+      const deleteBtn = row.비고 === '추가고객사'
+        ? `<button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red-bg);font-size:11px;" onclick="deleteExtraCustomer('${row.고객명.replace(/'/g,"\\'")}')">삭제</button>`
+        : '';
       return `<tr>
         <td style="font-family:var(--mono);font-size:11px;color:var(--text3)">${i+1}</td>
         <td class="td-name">${row.고객명}</td>
         <td>${typeBadge}</td>
         <td>${reactionBadge(row.고객명)}</td>
         <td style="font-family:var(--mono);text-align:center;">${actCount > 0 ? actCount+'회' : '–'}</td>
-      </tr>`;
-    }).join('')}</tbody>
+        <td>${deleteBtn}</td>
+      </tr>`;    }).join('')}</tbody>
   </table>`;
 }
 
