@@ -525,6 +525,35 @@
   .ring-labels { display:flex; flex-direction:column; gap:4px; }
   .ring-label-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text2); }
   .ring-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+/* 추가 고객사 입력 박스 */
+  .extra-box {
+    background: var(--surface2);
+    border: 1px dashed var(--border2);
+    border-radius: 7px;
+    padding: 12px;
+    margin-top: 8px;
+  }
+  .extra-box-label {
+    font-size: 10px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;
+  }
+  .extra-box-row { display: flex; gap: 6px; align-items: center; }
+  .extra-input {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 10px; color: var(--text);
+    font-family: var(--font); font-size: 13px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .extra-input:focus { border-color: var(--accent); }
+  .extra-input::placeholder { color: var(--text3); }
+  .btn-extra {
+    padding: 7px 12px; border-radius: 6px; background: var(--accent);
+    color: white; font-size: 12px; font-weight: 600; border: none;
+    cursor: pointer; white-space: nowrap; font-family: var(--font);
+    transition: background 0.15s;
+  }
+  .btn-extra:hover { background: var(--accent2); }
+  .extra-hint { font-size: 10px; color: var(--text3); margin-top: 5px; }
 </style>
 </head>
 <body>
@@ -603,7 +632,7 @@
   </div>
   <div style="width:1px;height:40px;background:#e2e8f0;"></div>
   <div style="flex:1;text-align:center;">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 컨택 건수</div>
+    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 회신 건수</div>
     <div><span id="kpi-all-contact" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">0</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
     <div style="font-size:10px;color:#94a3b8;margin-top:4px;">이메일·전화</div>
   </div>
@@ -657,7 +686,7 @@
         <!-- 2줄: 컨택건수 / 미팅건수 / 제안건수 -->
         <div class="type-kpi-row" style="border-top:1px solid var(--border);padding-top:10px;">
           <div class="type-kpi">
-            <div class="type-kpi-label">컨택 건수</div>
+            <div class="type-kpi-label">회신 건수</div>
             <div><span class="kpi-value" id="kpi-a-contact">0</span><span class="kpi-unit">건</span></div>
             <div class="kpi-sub" style="font-size:10px;">이메일·전화</div>
           </div>
@@ -710,7 +739,7 @@
         <!-- 2줄 -->
         <div class="type-kpi-row" style="border-top:1px solid var(--border);padding-top:10px;">
           <div class="type-kpi">
-            <div class="type-kpi-label">컨택 건수</div>
+            <div class="type-kpi-label">회신 건수</div>
             <div><span class="kpi-value" id="kpi-b-contact">0</span><span class="kpi-unit">건</span></div>
             <div class="kpi-sub" style="font-size:10px;">이메일·전화</div>
           </div>
@@ -792,7 +821,15 @@
           <div class="search-wrap">
             <input type="text" class="form-control" id="f-customer-input" placeholder="고객사명 검색..." autocomplete="off" oninput="filterCustomers(this.value)" onfocus="showDropdown()" onblur="hideDropdown()">
             <input type="hidden" id="f-customer-val">
-            <div class="search-dropdown" id="customer-dropdown"></div>
+         <div class="search-dropdown" id="customer-dropdown"></div>
+          </div>
+          <div class="extra-box">
+            <div class="extra-box-label">➕ 추가 고객사 입력</div>
+            <div class="extra-box-row">
+              <input type="text" class="extra-input" id="f-extra-customer" placeholder="리스트에 없는 고객사명 입력...">
+              <button class="btn-extra" onclick="addExtraCustomer()">+ 추가</button>
+            </div>
+            <div class="extra-hint">추가 시 A타입으로 등록되며, 위 검색창에서 바로 선택됩니다</div>
           </div>
         </div>
 
@@ -1012,6 +1049,11 @@ async function loadFromBin() {
     });
     const json = await res.json();
     activities = json.record.activities || [];
+    const extra = json.record.extraCustomers || [];
+    extra.forEach(name => {
+      if (!customers.find(c => c.고객명 === name))
+        customers.push({고객명: name, 사업자번호: '', 타입: 'A', 비고: '추가고객사'});
+    });
     renderActivityTable();
     refreshDash();
     renderCustomerTable(customers);
@@ -1031,7 +1073,7 @@ async function saveToBin() {
         'Content-Type': 'application/json',
         'X-Master-Key': API_KEY
       },
-      body: JSON.stringify({ activities })
+      body: JSON.stringify({ activities, extraCustomers: customers.filter(c => c.비고 === '추가고객사').map(c => c.고객명) })
     });
     showSyncStatus('ok');
   } catch(e) {
@@ -1246,6 +1288,28 @@ async function submitActivity() {
   await saveToBin();
 }
 
+function addExtraCustomer() {
+  const inp = document.getElementById('f-extra-customer');
+  const name = inp.value.trim();
+  if (!name) { showToast('⚠️', '고객사명을 입력해주세요'); return; }
+  if (customers.find(c => c.고객명 === name)) {
+    showToast('⚠️', `'${name}'은 이미 리스트에 있습니다`);
+    document.getElementById('f-customer-input').value='';
+    document.getElementById('f-customer-val').value='';
+     document.getElementById('f-extra-customer').value='';
+    inp.value = ''; return;
+  }
+  customers.push({고객명: name, 사업자번호: '', 타입: 'A', 비고: '추가고객사'});
+  document.getElementById('f-customer-input').value = name;
+  document.getElementById('f-customer-val').value = name;
+  inp.value = '';
+  refreshDash(); renderCustomerTable(customers);
+  showToast('✓', `'${name}' A타입으로 추가되었습니다`);
+  saveToBin();
+}
+document.getElementById('f-extra-customer').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addExtraCustomer(); }
+});
 function resetForm() {
   ['f-rep','f-type','f-memo','f-pain'].forEach(id => document.getElementById(id).value='');
   document.getElementById('f-customer-input').value='';
