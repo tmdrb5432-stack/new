@@ -1362,7 +1362,12 @@ function exportActivitiesExcel() {
 
 async function deleteActivity(id) {
   activities = activities.filter(a=>a.id!==id);
-  renderActivityTable(); refreshDash();
+  // 추가고객사 중 영업활동이 0건이 된 고객사는 customers에서도 제거
+  customers = customers.filter(c => {
+    if (c.비고 !== '추가고객사') return true;
+    return activities.some(a => a.customer === c.고객명);
+  });
+  renderActivityTable(); refreshDash(); renderCustomerTable(customers);
   showToast('🗑️','삭제되었습니다');
   await saveToBin();
 }
@@ -1656,8 +1661,13 @@ async function saveModalEdit() {
 function deleteFromModal() {
   if(!confirm('이 활동 내역을 삭제하시겠습니까?')) return;
   activities = activities.filter(a => a.id !== _modalId);
+  // 추가고객사 중 영업활동이 0건이 된 고객사는 customers에서도 제거
+  customers = customers.filter(c => {
+    if (c.비고 !== '추가고객사') return true;
+    return activities.some(a => a.customer === c.고객명);
+  });
   document.getElementById('actModal').classList.remove('open');
-  renderActivityTable(); refreshDash();
+  renderActivityTable(); refreshDash(); renderCustomerTable(customers);
   showToast('🗑️','삭제되었습니다');
   saveToBin();
 }
