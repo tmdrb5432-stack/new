@@ -759,7 +759,44 @@
         </div>
       </div>
     </div>
-
+    <!-- ── 1차 이메일 발송 결과 요약 ── -->
+    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 24px;margin-bottom:20px;display:flex;align-items:center;gap:0;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#16a34a);"></div>
+      <div style="flex:0 0 auto;padding-right:24px;border-right:1px solid #e2e8f0;margin-right:0;">
+        <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:2px;">1차 E-Mail 발송 결과</div>
+        <div style="font-size:11px;color:#94a3b8;">1차 이메일 발송 현황 · 총 1,038건</div>
+      </div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">전체 발송 건수</div>
+        <div><span style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1e293b;">1,038</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">전체 합산</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">정상발송</div>
+        <div><span style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#16a34a;">823</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">79.3%</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">반송</div>
+        <div><span onclick="openEmailModal('반송')" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#dc2626;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;">187</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">18.0%</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">회신_미팅예정</div>
+        <div><span onclick="openEmailModal('회신_미팅')" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#2563eb;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;">13</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">1.3%</div>
+      </div>
+      <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">회신_거절</div>
+        <div><span onclick="openEmailModal('회신_거절')" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#d97706;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;">15</span><span style="font-size:13px;color:#475569;margin-left:2px;">건</span></div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">1.4%</div>
+      </div>
+    </div>
+    
     <div class="dash-grid" style="grid-template-columns:1fr;">
       <!-- PainPoint 현황 -->
       <div class="dash-card">
@@ -994,9 +1031,9 @@
               <td class="td-name">합계</td>
               <td style="text-align:center;font-family:var(--mono);color:var(--text);">1,038</td>
               <td style="text-align:center;font-family:var(--mono);color:var(--green);">823</td>
-              <td style="text-align:center;font-family:var(--mono);color:var(--red);">187</td>
-              <td style="text-align:center;font-family:var(--mono);color:var(--accent);">13</td>
-              <td style="text-align:center;font-family:var(--mono);color:var(--yellow);">15</td>
+              <td style="text-align:center;font-family:var(--mono);color:var(--red);cursor:pointer;text-decoration:underline dotted;" onclick="openEmailModal('반송')">187</td>
+              <td style="text-align:center;font-family:var(--mono);color:var(--accent);cursor:pointer;text-decoration:underline dotted;" onclick="openEmailModal('회신_미팅')">13</td>
+              <td style="text-align:center;font-family:var(--mono);color:var(--yellow);cursor:pointer;text-decoration:underline dotted;" onclick="openEmailModal('회신_거절')">15</td>
               <td style="text-align:center;font-family:var(--mono);color:var(--green);">79.3%</td>
             </tr>
           </tfoot>
@@ -1091,6 +1128,33 @@
   </div>
 </div>
 
+<!-- 이메일 발송 결과 상세 모달 -->
+<div class="modal-overlay" id="emailModal" onclick="closeEmailModal(event)">
+  <div class="modal" style="width:600px;max-height:80vh;display:flex;flex-direction:column;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="emailModal-title">–</div>
+        <div class="modal-sub" id="emailModal-sub"></div>
+      </div>
+      <button class="modal-close" onclick="closeEmailModal(null)">✕</button>
+    </div>
+    <div style="overflow-y:auto;flex:1;">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>담당자</th>
+              <th>고객사</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody id="emailModal-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div> 
+  
 <!-- Toast -->
 <div class="toast" id="toast">
   <span class="toast-icon" id="toast-icon">✓</span>
@@ -1781,7 +1845,60 @@ document.addEventListener('keydown', e => {
 });
 
 // ──────────────── TOAST ────────────────
-function showToast(icon, msg) {
+// ──────────────── 1차 이메일 발송결과 모달 ────────────────
+const EMAIL_DATA = {
+  '반송': [
+    {rep:'강소연',name:'위펀',memo:''},{rep:'강소연',name:'지슨',memo:''},{rep:'강소연',name:'더파이러츠',memo:''},{rep:'강소연',name:'스카우트',memo:''},{rep:'강소연',name:'빅스데이터',memo:''},{rep:'강소연',name:'포트원솔루션스',memo:''},{rep:'강소연',name:'아카라라이프',memo:''},{rep:'강소연',name:'트레져러',memo:''},{rep:'강소연',name:'펫타버스',memo:'해지고객'},{rep:'강소연',name:'폴라리스에이아이',memo:''},{rep:'강소연',name:'렌쥴리에듀테인먼트',memo:'해지고객'},{rep:'강소연',name:'백퍼센트',memo:''},{rep:'강소연',name:'법률사무소해내',memo:''},{rep:'강소연',name:'디씨코리아',memo:''},{rep:'강소연',name:'에피톤코리아',memo:''},{rep:'강소연',name:'인베스트인코리아',memo:''},{rep:'강소연',name:'톰발리',memo:'해지고객'},{rep:'강소연',name:'토이소프트',memo:''},{rep:'강소연',name:'그로윈',memo:''},{rep:'강소연',name:'큐브렉스',memo:''},{rep:'강소연',name:'유원지리정보시스템',memo:''},{rep:'강소연',name:'시큐어링크',memo:''},{rep:'강소연',name:'디엠테크컨설팅',memo:''},{rep:'강소연',name:'포인투테크놀로지',memo:''},{rep:'강소연',name:'세원전설',memo:''},{rep:'강소연',name:'한국페이즈서비스',memo:''},{rep:'강소연',name:'위버시스템즈',memo:''},{rep:'강소연',name:'원티드랩',memo:''},{rep:'강소연',name:'이슬림코리아',memo:'해지고객'},{rep:'강소연',name:'퓨어랜드',memo:''},{rep:'강소연',name:'마인즈에듀',memo:''},{rep:'강소연',name:'케빈랩',memo:''},{rep:'강소연',name:'주페보(디디케어스)',memo:''},{rep:'강소연',name:'주옴니커넥트',memo:''},{rep:'강소연',name:'주온전히',memo:''},{rep:'강소연',name:'도비캔버스',memo:'자사서비스이용x'},{rep:'강소연',name:'그린다에이아이',memo:'자사서비스이용x'},{rep:'강소연',name:'주디지털뉴트리션',memo:'자사서비스이용x'},{rep:'강소연',name:'비트루브',memo:''},{rep:'강소연',name:'스마트콘(추가)',memo:''},
+    {rep:'김나정',name:'룩소티카코리아',memo:''},{rep:'김나정',name:'빅크',memo:''},{rep:'김나정',name:'네오위즈홀딩스',memo:''},{rep:'김나정',name:'모아이게임즈',memo:''},{rep:'김나정',name:'칩스앤미디어',memo:''},{rep:'김나정',name:'퓨처메인',memo:''},{rep:'김나정',name:'치즈에이드',memo:''},{rep:'김나정',name:'버츄어라이브',memo:''},{rep:'김나정',name:'해시스크래퍼',memo:''},{rep:'김나정',name:'핏미',memo:''},{rep:'김나정',name:'케어스퀘어',memo:''},{rep:'김나정',name:'블록체인글로벌',memo:''},{rep:'김나정',name:'아테크넷',memo:''},{rep:'김나정',name:'아이젠사이언스',memo:''},{rep:'김나정',name:'모빅랩',memo:''},{rep:'김나정',name:'로드시스템',memo:''},
+    {rep:'김윤환',name:'인플루엔셜',memo:''},{rep:'김윤환',name:'세이지그린',memo:''},{rep:'김윤환',name:'디어유',memo:''},{rep:'김윤환',name:'파워보이스',memo:''},{rep:'김윤환',name:'이노핀',memo:''},{rep:'김윤환',name:'주슈퍼솔루션',memo:''},{rep:'김윤환',name:'맵퍼스',memo:''},{rep:'김윤환',name:'아싸컴',memo:''},{rep:'김윤환',name:'퀵콜서비스',memo:''},{rep:'김윤환',name:'와드',memo:''},{rep:'김윤환',name:'전국꽃배달일일구플라워',memo:''},{rep:'김윤환',name:'삼화에스앤티',memo:''},{rep:'김윤환',name:'굿메디',memo:''},{rep:'김윤환',name:'딜러타이어',memo:''},{rep:'김윤환',name:'커버링',memo:''},{rep:'김윤환',name:'한국통합물류협회',memo:''},{rep:'김윤환',name:'아몬드',memo:''},{rep:'김윤환',name:'펫프렌즈',memo:''},{rep:'김윤환',name:'핸드허그',memo:''},{rep:'김윤환',name:'셀러노트',memo:''},{rep:'김윤환',name:'타마비즈',memo:''},{rep:'김윤환',name:'데일리앤코',memo:''},{rep:'김윤환',name:'우리와',memo:''},{rep:'김윤환',name:'데일리페이',memo:''},{rep:'김윤환',name:'토르드라이브',memo:''},{rep:'김윤환',name:'나바아시아',memo:''},{rep:'김윤환',name:'아르고코퍼레이션',memo:''},{rep:'김윤환',name:'세상을바꾸는사람들',memo:''},{rep:'김윤환',name:'갤럭시아에스엠',memo:''},{rep:'김윤환',name:'주식회사 락플레이스',memo:''},{rep:'김윤환',name:'플리닉랩스',memo:''},{rep:'김윤환',name:'드림팩토리스튜디오',memo:''},{rep:'김윤환',name:'스타일쿡',memo:''},{rep:'김윤환',name:'준주얼리',memo:''},{rep:'김윤환',name:'체리코코',memo:''},
+    {rep:'안수진',name:'마켓보로',memo:''},{rep:'안수진',name:'주스테나',memo:''},{rep:'안수진',name:'리본즈',memo:''},{rep:'안수진',name:'주지에프에프지',memo:''},{rep:'안수진',name:'코다스디자인',memo:''},{rep:'안수진',name:'인앤아웃코퍼레이션',memo:''},{rep:'안수진',name:'브로제이',memo:''},{rep:'안수진',name:'커넥팅더닷츠',memo:''},{rep:'안수진',name:'아이헤이트플라잉버그스',memo:''},{rep:'안수진',name:'21그램그룹',memo:''},{rep:'안수진',name:'넥슨게임즈',memo:''},{rep:'안수진',name:'룰루랄라',memo:''},{rep:'안수진',name:'주반프',memo:''},{rep:'안수진',name:'바이탈힌트코리아',memo:''},{rep:'안수진',name:'아파트멘터리',memo:''},{rep:'안수진',name:'올림플래닛',memo:''},{rep:'안수진',name:'미소정보기술',memo:''},{rep:'안수진',name:'디알엑스',memo:''},{rep:'안수진',name:'파인더스에이아이',memo:''},{rep:'안수진',name:'어딩',memo:''},{rep:'안수진',name:'밀집',memo:''},{rep:'안수진',name:'엠지알브이',memo:''},{rep:'안수진',name:'소다크루',memo:''},{rep:'안수진',name:'보이스루',memo:''},{rep:'안수진',name:'위즈코어',memo:''},{rep:'안수진',name:'라피티',memo:''},{rep:'안수진',name:'핀인사이트',memo:''},{rep:'안수진',name:'클린씨',memo:''},{rep:'안수진',name:'필라이즈',memo:''},{rep:'안수진',name:'안드레이아',memo:''},{rep:'안수진',name:'델리오',memo:''},{rep:'안수진',name:'오믈렛',memo:''},{rep:'안수진',name:'알리고에이아이',memo:''},{rep:'안수진',name:'바티에이아이',memo:''},
+    {rep:'이정민',name:'한일카페트',memo:''},{rep:'이정민',name:'바이오닉스',memo:''},{rep:'이정민',name:'오지큐',memo:''},{rep:'이정민',name:'트리즈커머스',memo:''},{rep:'이정민',name:'티엔제이',memo:''},{rep:'이정민',name:'엠투컴',memo:''},{rep:'이정민',name:'에프앤에스홀딩스',memo:''},{rep:'이정민',name:'펫박스',memo:''},{rep:'이정민',name:'카이트로닉스',memo:''},{rep:'이정민',name:'주아도바',memo:''},{rep:'이정민',name:'니어스랩',memo:''},{rep:'이정민',name:'너디스타',memo:''},{rep:'이정민',name:'브레이브컴퍼니',memo:''},{rep:'이정민',name:'크래프트테크놀로지스',memo:''},{rep:'이정민',name:'주비플랜트',memo:''},{rep:'이정민',name:'죽산개발',memo:''},{rep:'이정민',name:'닷',memo:''},{rep:'이정민',name:'소프트힐스',memo:''},{rep:'이정민',name:'씨에이플래닛',memo:''},{rep:'이정민',name:'클레',memo:''},{rep:'이정민',name:'올위메이크이즈',memo:''},{rep:'이정민',name:'단꿈아이',memo:''},{rep:'이정민',name:'이투온',memo:''},{rep:'이정민',name:'라이브데이터',memo:''},{rep:'이정민',name:'주식회사 에프오에프',memo:''},{rep:'이정민',name:'주식회사 지엔',memo:''},{rep:'이정민',name:'주식회사 큰삼촌컴퍼니',memo:''},{rep:'이정민',name:'주식회사 프레쉬아워',memo:''},{rep:'이정민',name:'주식회사 프레시아워',memo:''},{rep:'이정민',name:'주식회사 피카부랩스',memo:''},{rep:'이정민',name:'주식회사반려동물',memo:''},{rep:'이정민',name:'컬리지니에이아이',memo:''},{rep:'이정민',name:'컴퍼니에이',memo:''},{rep:'이정민',name:'케어포유',memo:''},{rep:'이정민',name:'크디랩(SoKind)',memo:''},{rep:'이정민',name:'테크레디',memo:''},{rep:'이정민',name:'팀리미티드',memo:''},{rep:'이정민',name:'판티마',memo:''},
+    {rep:'추승훈',name:'에어키',memo:''},{rep:'추승훈',name:'온다',memo:''},{rep:'추승훈',name:'이노보테라퓨틱스',memo:''},{rep:'추승훈',name:'씨플랫폼',memo:''},{rep:'추승훈',name:'뉴로핏',memo:''},{rep:'추승훈',name:'오피지지',memo:''},{rep:'추승훈',name:'스와치온',memo:''},{rep:'추승훈',name:'인포유앤컴퍼니',memo:''},{rep:'추승훈',name:'인베트',memo:''},{rep:'추승훈',name:'에크록스',memo:''},{rep:'추승훈',name:'인슈로보',memo:''},{rep:'추승훈',name:'파미레세',memo:''},{rep:'추승훈',name:'칠로엔',memo:''},{rep:'추승훈',name:'마인즈에이아이',memo:''},{rep:'추승훈',name:'디스펙터',memo:''},{rep:'추승훈',name:'온마이뎁',memo:''},{rep:'추승훈',name:'라이팩',memo:''},{rep:'추승훈',name:'헤세그',memo:''},{rep:'추승훈',name:'퓨처키친',memo:''},{rep:'추승훈',name:'바스바이',memo:''},{rep:'추승훈',name:'에이프로코리아',memo:''},{rep:'추승훈',name:'오픈메이트온',memo:''},{rep:'추승훈',name:'오스카퓨쳐라',memo:''}
+  ],
+  '회신_미팅': [
+    {rep:'강소연',name:'브릴스',memo:'4/29(수) 미팅 예정'},{rep:'강소연',name:'뽀득',memo:'4/30(목) 미팅 예정'},{rep:'강소연',name:'소리바다',memo:'담당자 연락처 전달: 윤정식'},{rep:'강소연',name:'보임테크놀러지',memo:'4/28(화) 미팅 예정'},{rep:'강소연',name:'스마트콘',memo:'5/11(월) 미팅 예정'},{rep:'강소연',name:'주스위트앤데이터',memo:'4/27(월) 미팅 예정'},
+    {rep:'김윤환',name:'바이브온코퍼레이션',memo:'미팅 조율중'},
+    {rep:'안수진',name:'오드엠',memo:'전직원 재택으로 이메일 소통 요청'},{rep:'안수진',name:'휴로틱스',memo:'5/7 미팅 예정'},{rep:'안수진',name:'노르마',memo:'미팅 일정 조율중'},{rep:'안수진',name:'지오벤처스',memo:'서비스 중인 상품 확인 요청'},
+    {rep:'이정민',name:'주식회사 프리딕션',memo:'일정조율'},{rep:'이정민',name:'팀스페이스팜',memo:'일정조율'}
+  ],
+  '회신_거절': [
+    {rep:'강소연',name:'에스피소프트',memo:'미팅 거절'},{rep:'강소연',name:'재단엘지연암문화재단',memo:'미팅 거절'},{rep:'강소연',name:'그루컴퍼니',memo:'미팅 거절'},{rep:'강소연',name:'한비로소프트',memo:'미팅 거절'},{rep:'강소연',name:'주옵트에이아이',memo:'미팅 거절'},
+    {rep:'김윤환',name:'코리아포트원',memo:'미팅 거절'},
+    {rep:'안수진',name:'프린팅박스',memo:'미팅 거절'},{rep:'안수진',name:'아티스트컴퍼니',memo:'미팅 거절'},{rep:'안수진',name:'비알랩',memo:'미팅 거절'},{rep:'안수진',name:'인진',memo:'미팅 거절'},{rep:'안수진',name:'페어리',memo:'컨택 확보 경로 확인 요청'},
+    {rep:'이정민',name:'에듀템',memo:'오피스넷 불만족 유선 클레임'},{rep:'이정민',name:'클라이머스',memo:'유선거절(타사고객_관심없음)'},
+    {rep:'추승훈',name:'니즈게임즈',memo:'미팅 거절'},{rep:'추승훈',name:'히츠',memo:'미팅 거절'}
+  ]
+};
+
+function openEmailModal(type) {
+  const labelMap = {'반송':'반송','회신_미팅':'회신_미팅예정','회신_거절':'회신_거절'};
+  const colorMap = {'반송':'var(--red)','회신_미팅':'var(--accent)','회신_거절':'var(--yellow)'};
+  const data = EMAIL_DATA[type] || [];
+  document.getElementById('emailModal-title').textContent = `1차 이메일 ${labelMap[type]} 목록`;
+  document.getElementById('emailModal-sub').textContent = `총 ${data.length}건`;
+
+  const tbody = document.getElementById('emailModal-tbody');
+  if(!data.length) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:24px;">데이터 없음</td></tr>';
+  } else {
+    tbody.innerHTML = data.map(d => `
+      <tr>
+        <td style="white-space:nowrap;font-weight:500;color:var(--text);">${d.rep}</td>
+        <td class="td-name">${d.name}</td>
+        <td style="color:var(--text2);font-size:12px;">${d.memo||'–'}</td>
+      </tr>`).join('');
+  }
+  document.getElementById('emailModal').classList.add('open');
+}
+
+function closeEmailModal(e) {
+  if(e && e.target !== document.getElementById('emailModal')) return;
+  document.getElementById('emailModal').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') document.getElementById('emailModal').classList.remove('open');
+});
+  function showToast(icon, msg) {
   const t = document.getElementById('toast');
   document.getElementById('toast-icon').textContent = icon;
   document.getElementById('toast-msg').textContent = msg;
